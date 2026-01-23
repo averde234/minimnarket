@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="assets/css/app.css">
     <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
     <script src="assets/js/client-guard.js"></script>
+    <script src="assets/js/auth-guard.js"></script>
 </head>
 
 <body>
@@ -21,12 +22,29 @@
                 </div>
                 <div class="sidebar-menu">
                     <ul class="menu">
-                        <li class='sidebar-title'>Menu Cliente</li>
+                        <li class='sidebar-title'>Menu</li>
+
                         <li class="sidebar-item active ">
-                            <a href="dashboard-cliente.html" class='sidebar-link'>
+                            <a href="dashboard-vendedor.html" class='sidebar-link'>
                                 <i data-feather="home" width="20"></i>
-                                <span>Mis Compras</span>
+                                <span>Dashboard</span>
                             </a>
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i data-feather="triangle" width="20"></i>
+                                <span>Ventas</span>
+                            </a>
+
+                            <ul class="submenu ">
+                                <li>
+                                    <a href="1VENTA.html">Registrar ventas</a>
+                                </li>
+                                <li>
+                                    <a href="1LISTAVENTA.html">Historial de ventas</a>
+                                </li>
+                            </ul>
                         </li>
                     </ul>
                 </div>

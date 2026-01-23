@@ -6,7 +6,9 @@
 
     // 1. Verificar si hay usuario logueado
     if (!userJson) {
-        console.warn('Acceso denegado: No hay sesión.');
+        // Ocultar todo el contenido inmediatamente para que no se vea nada
+        document.documentElement.style.display = 'none';
+        window.stop(); // Detener carga de recursos
         window.location.href = '1auth-login.html';
         return;
     }
