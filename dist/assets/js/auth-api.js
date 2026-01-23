@@ -51,13 +51,17 @@ document.addEventListener('DOMContentLoaded', function () {
                     localStorage.setItem('user', JSON.stringify(data.user));
 
                     // Redirigir según rol
-                    // Redirigir según rol
-                    if (data.user.rol === 'admin') {
+                    // Normalizar rol para evitar errores de mayúsculas/minúsculas
+                    const userRole = (data.user.rol || data.user.role || '').toLowerCase().trim();
+                    console.log('Rol detectado:', userRole);
+
+                    if (userRole === 'admin' || userRole === 'administrador') {
                         window.location.href = 'Dashboiard-admin.html';
-                    } else if (data.user.rol === 'vendedor') {
+                    } else if (userRole === 'vendedor') {
                         window.location.href = 'dashboard-vendedor.html';
                     } else {
-                        // Redirigir a dashboard por defecto o mostrar error
+                        // Si no coincide, enviar a index (dashboard cliente/default)
+                        console.warn('Rol no reconocido:', userRole);
                         window.location.href = 'index.html';
                     }
 
