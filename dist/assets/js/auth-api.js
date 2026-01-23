@@ -2,7 +2,7 @@
 // auth-api.js
 // Maneja la comunicación con el backend (Node.js + Supabase)
 
-const API_URL = 'http://localhost:5000'; // URL del backend
+const API_URL = 'https://minimnarket.onrender.com'; // URL del backend
 
 document.addEventListener('DOMContentLoaded', function () {
 

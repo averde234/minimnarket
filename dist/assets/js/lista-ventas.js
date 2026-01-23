@@ -1,7 +1,7 @@
 
 
 const tableBody = document.querySelector('#tablaVentas tbody');
-const API_URL = 'http://localhost:5000';
+const API_URL = 'https://minimnarket.onrender.com';
 const cardContent = document.querySelector(".card-content");
 
 let allVentas = [];

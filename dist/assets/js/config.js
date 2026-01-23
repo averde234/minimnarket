@@ -3,4 +3,4 @@
 // En local: "http://localhost:5000"
 // En producción: "https://tu-api-en-render.com"
 
-const SERVER_URL = "http://localhost:5000";
+const SERVER_URL = "https://minimnarket.onrender.com";

@@ -1,6 +1,6 @@
 // productos-api.js
 
-const API_URL = 'http://localhost:5000/productos';
+const API_URL = 'https://minimnarket.onrender.com/productos';
 
 document.addEventListener('DOMContentLoaded', async () => {
     const tableBody = document.getElementById('table-body');

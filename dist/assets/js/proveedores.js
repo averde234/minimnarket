@@ -1,6 +1,6 @@
 
 document.addEventListener("DOMContentLoaded", async () => {
-    const API_URL = "http://localhost:5000";
+    const API_URL = "https://minimnarket.onrender.com";
     const tablaCuerpo = document.getElementById("tbody-proveedores");
     const cardContent = document.querySelector(".card-content");
     const btnGuardar = document.getElementById("btnGuardarProveedor");

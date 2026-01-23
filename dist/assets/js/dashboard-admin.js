@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const API_URL = 'http://localhost:5000';
+    const API_URL = 'https://minimnarket.onrender.com';
 
     const tasaEl = document.getElementById('admin-tasa-dolar');
     const ventasHoyEl = document.getElementById('admin-ventas-hoy');

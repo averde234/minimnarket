@@ -1,5 +1,5 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const API_URL = "http://localhost:5000";
+    const API_URL = "https://minimnarket.onrender.com";
     const tablaCuerpo = document.querySelector("#table1 tbody");
     const precioDolarLabel = document.getElementById("precio-dolar");
     let precioDolar = 1;
