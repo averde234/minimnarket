@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registrar Compra</title>
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+    <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+</head>
+
+<body>
+    <div id="app">
+        <div id="sidebar" class="active">
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-header">
+                    <img src="assets/images/logo.svg" alt="">
+                </div>
+                <div class="sidebar-menu">
+                    <ul class="menu">
+
+
+                        <li class='sidebar-title'>Menu</li>
+
+
+
+                        <li class="sidebar-item  ">
+                            <a href="index.html" class='sidebar-link'>
+                                <i data-feather="home" width="20"></i>
+                                <span>Dashboard</span>
+                            </a>
+
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="1productos.html" class='sidebar-link'>
+                                <i data-feather="layout" width="20"></i>
+                                <span>Productos</span>
+                            </a>
+
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="form-layout.html" class='sidebar-link'>
+                                <i data-feather="layout" width="20"></i>
+                                <span>Inventario</span>
+                            </a>
+
+                        </li>
+
+
+                        <li class="sidebar-item  has-sub active">
+                            <a href="#" class='sidebar-link'>
+                                <i data-feather="triangle" width="20"></i>
+                                <span>Compras</span>
+                            </a>
+
+                            <ul class="submenu ">
+
+                                <li>
+                                    <a href="component-alert.html">Registrar Compra</a>
+                                </li>
+
+                                <li>
+                                    <a href="component-badge.html">Historial de compras</a>
+                                </li>
+
+                            </ul>
+
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i data-feather="triangle" width="20"></i>
+                                <span>Ventas</span>
+                            </a>
+
+                            <ul class="submenu ">
+
+                                <li>
+                                    <a href="component-alert.html">Registrar ventas</a>
+                                </li>
+
+                                <li>
+                                    <a href="component-badge.html">Historial de ventas</a>
+                                </li>
+
+                            </ul>
+
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="form-layout.html" class='sidebar-link'>
+                                <i data-feather="layout" width="20"></i>
+                                <span>Proveedores</span>
+                            </a>
+
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="form-layout.html" class='sidebar-link'>
+                                <i data-feather="layout" width="20"></i>
+                                <span>Usuarios</span>
+                            </a>
+
+                        </li>
+
+                </div>
+                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+            </div>
+        </div>
+
+        <div id="main">
+            <nav class="navbar navbar-header navbar-expand navbar-light">
+                <a class="sidebar-toggler" href="#"><span class="navbar-toggler-icon"></span></a>
+                <button class="btn navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav d-flex align-items-center navbar-light ml-auto">
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown"
+                                class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                                <div class="d-none d-md-block d-lg-inline-block" id="header-user-name">Usuario</div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="#" id="logout-btn"><i data-feather="log-out"></i> Cerrar
+                                    Sesión</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="main-content container-fluid">
+                <div class="page-title">
+                    <div class="row">
+                        <div class="col-12 col-md-6 order-md-1 order-last">
+                            <h3>Registrar compra</h3>
+                            <p>Tasa de cambio: <span id="precio-dolar"></span></p>
+                        </div>
+                        <div class="col-12 col-md-6 order-md-2 order-first">
+                            <nav aria-label="breadcrumb" class="breadcrumb-header">
+                                <ol class="breadcrumb">
+                                    <li class="breadcrumb-item"><a href="index.html">Dashboard</a></li>
+                                    <li class="breadcrumb-item active" aria-current="page">Compras</li>
+                                    <li class="breadcrumb-item active" aria-current="page">Registrar compras</li>
+                                </ol>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-12">
+                    <div class="card">
+                        <div class="card-header">
+                            <h4>Registro</h4>
+                        </div>
+                        <div class="card-body" style="position: relative;">
+                            <!-- Alertas -->
+                            <div id="alert-success" class="alert alert-primary"
+                                style="display: none; position: absolute; bottom: 0; right: 0;">
+                                Registrado correctamente
+                            </div>
+                            <div id="alert-error" class="alert alert-danger"
+                                style="display: none; position: absolute; bottom: 0; right: 0;">
+                                Falta un campo
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Codigo de barra</label>
+                                        <div class="input-group input-group-sm">
+                                            <input type="text" id="codigoBarra" class="form-control"
+                                                placeholder="Ingrese código">
+                                            <button id="buscarCodigo" class="btn btn-primary">
+                                                <i data-feather="search"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Cantidad</label>
+                                        <input type="text" id="cantidad" class="form-control form-control-sm">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Descripción</label>
+                                        <input type="text" id="producto" class="form-control form-control-sm">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Porcentaje de ganancia (%)</label>
+                                        <input type="text" id="porcentajeGanancia" class="form-control form-control-sm">
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <div class="form-group">
+                                        <label>Proveedor</label>
+                                        <select id="proveedor" class="choices form-select">
+                                            <option selected>Seleccione proveedor</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Precio de entrada BS</label>
+                                        <input type="text" id="precioEntradaBs" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Precio de salida BS</label>
+                                        <input type="text" id="precioSalidaBs" class="form-control" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Margen de ganancia BS</label>
+                                        <input type="text" id="margenGananciaBs" class="form-control" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Precio unitario BS</label>
+                                        <input type="text" id="precioUnidadBs" class="form-control" disabled>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label>Precio de entrada USD</label>
+                                        <input type="text" id="precioEntradaUsd" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Precio de salida USD</label>
+                                        <input type="text" id="precioSalidaUsd" class="form-control" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Margen de ganancia USD</label>
+                                        <input type="text" id="margenGananciaUsd" class="form-control" disabled>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Precio unitario USD</label>
+                                        <input type="text" id="precioUnidadUsd" class="form-control" disabled>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <br>
+                            <div class="buttons">
+                                <button id="guardarInventario" class="btn btn-outline-primary">Guardar</button>
+                                <button id="limpiar" class="btn btn-outline-secondary">Limpiar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <footer>
+                    <div class="footer clearfix mb-0 text-muted">
+                        <div class="float-left">
+                            <p>2025 &copy; Ale</p>
+                        </div>
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Agregar Producto -->
+    <button id="btnOpenModal" data-toggle="modal" data-target="#modalAgregarProducto" style="display:none;"></button>
+    <div class="modal fade text-left" id="modalAgregarProducto" tabindex="-1" role="dialog" aria-labelledby="modalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-primary">
+                    <h5 class="modal-title white" id="modalLabel">Nuevo Producto</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <i data-feather="x"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="formNuevoProducto">
+                        <div class="form-group">
+                            <label>Código de Barra</label>
+                            <input type="text" id="modalCodigo" class="form-control" readonly>
+                        </div>
+                        <div class="form-group">
+                            <label>Descripción</label>
+                            <input type="text" id="modalDescripcion" class="form-control"
+                                placeholder="Ej: Arroz Mary 1kg" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Categoría</label>
+                            <select id="modalCategoria" class="choices form-select" required>
+                                <option value="" selected disabled>Seleccione una categoría</option>
+                            </select>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
+                        <span class="d-none d-sm-block">Cancelar</span>
+                    </button>
+                    <button type="button" class="btn btn-primary ml-1" id="btnGuardarProducto">
+                        <span class="d-none d-sm-block">Guardar Producto</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script src="assets/js/feather-icons/feather.min.js"></script>
+    <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="assets/js/app.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/compras.js"></script>
+    <script src="assets/js/session.js"></script>
+</body>
+
+</html>

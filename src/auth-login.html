@@ -1,0 +1,132 @@
+{% extends 'layouts/master-auth.html' %}
+{% set title = "Sign in" %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-5 col-sm-12 mx-auto">
+            <div class="card pt-4">
+                <div class="card-body">
+                    <div class="text-center mb-5">
+                        <img src="assets/images/favicon.svg" height="48" class='mb-4'>
+                        <h3>Sign In</h3>
+                        <p>Please sign in to continue to Voler.</p>
+                    </div>
+                    <div id="error-message" class="alert alert-danger d-none" role="alert"></div>
+                    <form id="loginForm">
+                        <div class="form-group position-relative has-icon-left">
+                            <label for="email">Email</label>
+                            <div class="position-relative">
+                                <input type="email" class="form-control" id="email" required>
+                                <div class="form-control-icon">
+                                    <i data-feather="user"></i>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group position-relative has-icon-left">
+                            <div class="clearfix">
+                                <label for="password">Password</label>
+                                <a href="auth-forgot-password.html" class='float-right'>
+                                    <small>Forgot password?</small>
+                                </a>
+                            </div>
+                            <div class="position-relative">
+                                <input type="text" class="form-control" id="password">
+                                <div class="form-control-icon">
+                                    <i data-feather="lock"></i>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class='form-check clearfix my-4'>
+                            <div class="checkbox float-left">
+                                <input type="checkbox" id="checkbox1" class='form-check-input'>
+                                <label for="checkbox1">Remember me</label>
+                            </div>
+                            <div class="float-right">
+                                <a href="auth-register.html">Don't have an account?</a>
+                            </div>
+                        </div>
+                        <div class="clearfix">
+                            <button class="btn btn-primary float-right">Submit</button>
+                        </div>
+                    </form>
+                    <div class="divider">
+                        <div class="divider-text">OR</div>
+                    </div>
+                    <div class="row">
+                        <div class="col-sm-6">
+                            <button class="btn btn-block mb-2 btn-primary"><i data-feather="facebook"></i>
+                                Facebook</button>
+                        </div>
+                        <div class="col-sm-6">
+                            <button class="btn btn-block mb-2 btn-secondary"><i data-feather="github"></i>
+                                Github</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block js %}
+<!-- Supabase JS via CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<script>
+    // Configuración Directa (Ya que no usamos build/env en este modo HTML simple)
+    const SUPABASE_URL = "https://pocdidrvbojggxhfslxp.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBvY2RpZHJ2Ym9qZ2d4aGZzbHhwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjQ3OTUzOTQsImV4cCI6MjA4MDM3MTM5NH0.UoUbHvuwxQIAEYN3S6W6yc_0oTYSABAEC2DRRflM6L4";
+
+    // Inicializar Cliente
+    const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    document.addEventListener('DOMContentLoaded', function () {
+        const loginForm = document.getElementById('loginForm');
+        const errorMessage = document.getElementById('error-message');
+
+        if (loginForm) {
+            loginForm.addEventListener('submit', async function (e) {
+                e.preventDefault();
+
+                // UI Clean up
+                errorMessage.classList.add('d-none');
+                errorMessage.textContent = '';
+                const btn = loginForm.querySelector('button');
+                btn.disabled = true;
+                btn.textContent = 'Ingresando...';
+
+                const email = document.getElementById('email').value;
+                const password = document.getElementById('password').value;
+
+                try {
+                    // Login con Supabase
+                    const { data, error } = await supabase.auth.signInWithPassword({
+                        email: email,
+                        password: password,
+                    });
+
+                    if (error) throw error;
+
+                    // Éxito
+                    if (data.session) {
+                        localStorage.setItem('access_token', data.session.access_token);
+                        localStorage.setItem('user_data', JSON.stringify(data.user));
+
+                        // Redirigir
+                        window.location.href = 'index.html';
+                    }
+
+                } catch (error) {
+                    console.error('Login error:', error);
+                    errorMessage.textContent = error.message || 'Error al iniciar sesión';
+                    errorMessage.classList.remove('d-none');
+                    btn.disabled = false;
+                    btn.textContent = 'Submit';
+                }
+            });
+        }
+    });
+</script>
+{% endblock %}

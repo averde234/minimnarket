@@ -1,0 +1,146 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+    --main-bg-color : #7a0008;
+    --main-text-color:  #c2000c;
+    --second-text-color: #bbbec5;
+    --second-bg-color: #c1efde;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-image: linear-gradient(
+        to right,
+        #da95a2,
+        #dea1ad,
+        #e2adb7,
+        #e4b3bd
+    );
+  color: #111;
+}
+
+
+.logo {
+  font-size: 1.5rem;
+}
+
+.menu ul {
+  list-style: none;
+  display: flex;
+  gap: 25px;
+  flex-wrap: wrap;
+}
+
+.menu a {
+  text-decoration: none;
+  color: #111;
+  font-weight: bold;
+  font-size: 1rem;
+}
+
+.icons span {
+  margin-left: 15px;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+.login-container {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.login-box {
+  background: #fff;
+  padding: 40px;
+  border-radius: 15px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.1);
+  width: 100%;
+  max-width: 400px;
+}
+
+.login-box h2 {
+  margin-bottom: 30px;
+  font-size: 1.8rem;
+  text-align: center;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+}
+
+label {
+  font-size: 0.9rem;
+  margin-bottom: 5px;
+}
+
+input {
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  font-size: 1rem;
+  transition: border 0.2s;
+}
+
+input:focus {
+  outline: none;
+  border-color: #000;
+}
+
+button {
+  padding: 12px;
+  background-color: var(--main-bg-color);
+  color: #fff;
+  border: none;
+  font-weight: bold;
+  font-size: 1rem;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+button:hover {
+  background-color: var(--main-text-color);
+}
+
+.options {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  font-size: 0.9rem;
+}
+
+.options a {
+  color: #111;
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.options a:hover {
+  color: #555;
+}
+
+@media (max-width: 600px) {
+  .navbar {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .menu ul {
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .login-box {
+    padding: 30px 20px;
+  }
+}

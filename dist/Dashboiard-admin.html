@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin</title>
+
+    <link rel="stylesheet" href="assets/css/bootstrap.css">
+
+    <link rel="stylesheet" href="assets/vendors/chartjs/Chart.min.css">
+
+    <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
+    <link rel="stylesheet" href="assets/css/app.css">
+    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
+    <script src="assets/js/auth-guard.js"></script>
+</head>
+
+<body>
+    <div id="app">
+        <div id="sidebar" class='active'>
+            <div class="sidebar-wrapper active">
+                <div class="sidebar-header">
+                    <img src="assets/images/logo.svg" alt="" srcset="">
+                </div>
+                <div class="sidebar-menu">
+                    <ul class="menu">
+
+
+                        <li class='sidebar-title'>Menu</li>
+
+
+
+                        <li class="sidebar-item active ">
+                            <a href="Dashboiard-admin.html" class='sidebar-link'>
+                                <i data-feather="home" width="20"></i>
+                                <span>Dashboard</span>
+                            </a>
+
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="1productos.html" class='sidebar-link'>
+                                <i data-feather="layout" width="20"></i>
+                                <span>Productos</span>
+                            </a>
+
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="1inventario.html" class='sidebar-link'>
+                                <i data-feather="layout" width="20"></i>
+                                <span>Inventario</span>
+                            </a>
+
+                        </li>
+
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i data-feather="triangle" width="20"></i>
+                                <span>Compras</span>
+                            </a>
+
+                            <ul class="submenu ">
+
+                                <li>
+                                    <a href="1compra.html">Registrar Compra</a>
+                                </li>
+
+                                <li>
+                                    <a href="1LISTACOMPRA.html">Historial de compras</a>
+                                </li>
+
+                            </ul>
+
+                        </li>
+
+                        <li class="sidebar-item  has-sub">
+                            <a href="#" class='sidebar-link'>
+                                <i data-feather="triangle" width="20"></i>
+                                <span>Ventas</span>
+                            </a>
+
+                            <ul class="submenu ">
+
+                                <li>
+                                    <a href="1VENTA.html">Registrar ventas</a>
+                                </li>
+
+                                <li>
+                                    <a href="1LISTAVENTA.html">Historial de ventas</a>
+                                </li>
+
+                            </ul>
+
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="1proveedores.html" class='sidebar-link'>
+                                <i data-feather="layout" width="20"></i>
+                                <span>Proveedores</span>
+                            </a>
+
+                        </li>
+
+                        <li class="sidebar-item  ">
+                            <a href="1usuarios.html" class='sidebar-link'>
+                                <i data-feather="layout" width="20"></i>
+                                <span>Usuarios</span>
+                            </a>
+
+                        </li>
+
+                </div>
+                <button class="sidebar-toggler btn x"><i data-feather="x"></i></button>
+            </div>
+        </div>
+        <div id="main">
+            <nav class="navbar navbar-header navbar-expand navbar-light">
+                <a class="sidebar-toggler" href="#"><span class="navbar-toggler-icon"></span></a>
+                <button class="btn navbar-toggler" type="button" data-toggle="collapse"
+                    data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    <ul class="navbar-nav d-flex align-items-center navbar-light ml-auto">
+
+
+                        <li class="dropdown">
+                            <a href="#" data-toggle="dropdown"
+                                class="nav-link dropdown-toggle nav-link-lg nav-link-user">
+                                <div class="d-none d-md-block d-lg-inline-block" id="user-name-display">Cargando...
+                                </div>
+                            </a>
+                            <div class="dropdown-menu dropdown-menu-right">
+                                <a class="dropdown-item" href="#" onclick="logout()"><i data-feather="log-out"></i>
+                                    Cerrar Sesión</a>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+
+            <div class="main-content container-fluid">
+                <div class="page-title">
+                    <h3>Dashboard</h3>
+                </div>
+                <section class="section">
+                    <div class="row mb-2">
+                        <div class="col-12 col-md-3">
+                            <div class="card card-statistic">
+                                <div class="card-body p-0">
+                                    <div class="d-flex flex-column">
+                                        <div class='px-3 py-3 d-flex justify-content-between'>
+                                            <h3 class='card-title'>Tasa del Dólar</h3>
+                                        </div>
+                                        <div class="px-3 pb-3 d-flex justify-content-end align-items-end"
+                                            style="min-height: 80px;">
+                                            <h2 class="font-weight-bold mb-0 text-white" id="admin-tasa-dolar"
+                                                style="font-size: 2.5rem;">Cargando...</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="card card-statistic">
+                                <div class="card-body p-0">
+                                    <div class="d-flex flex-column">
+                                        <div class='px-3 py-3 d-flex justify-content-between'>
+                                            <h3 class='card-title'>Ventas del Día</h3>
+                                        </div>
+                                        <div class="px-3 pb-3 d-flex justify-content-end align-items-end"
+                                            style="min-height: 80px;">
+                                            <h2 class="font-weight-bold mb-0 text-white" id="admin-ventas-hoy"
+                                                style="font-size: 2.5rem;">Cargando...</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="card card-statistic">
+                                <div class="card-body p-0">
+                                    <div class="d-flex flex-column">
+                                        <div class='px-3 py-3 d-flex justify-content-between'>
+                                            <h3 class='card-title'>Total Productos</h3>
+                                        </div>
+                                        <div class="px-3 pb-3 d-flex justify-content-end align-items-end"
+                                            style="min-height: 80px;">
+                                            <h2 class="font-weight-bold mb-0 text-white" id="admin-total-productos"
+                                                style="font-size: 2.5rem;">Cargando...</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-md-3">
+                            <div class="card card-statistic">
+                                <div class="card-body p-0">
+                                    <div class="d-flex flex-column">
+                                        <div class='px-3 py-3 d-flex justify-content-between'>
+                                            <h3 class='card-title'>Usuarios Registrados</h3>
+                                        </div>
+                                        <div class="px-3 pb-3 d-flex justify-content-end align-items-end"
+                                            style="min-height: 80px;">
+                                            <h2 class="font-weight-bold mb-0 text-white" id="admin-total-usuarios"
+                                                style="font-size: 2.5rem;">Cargando...</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class='card-heading p-1 pl-3'>Ventas</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4 col-12">
+                                            <div class="pl-3">
+                                                <h1 class='mt-5' id="admin-sales-header">$0.00</h1>
+                                                <p class='text-xs'>
+                                                    <span class="text-green" id="admin-sales-percentage">
+                                                        <i data-feather="bar-chart" width="15"></i> 0%
+                                                    </span>
+                                                    <span id="admin-sales-comparison">vs mes anterior</span>
+                                                </p>
+                                                <div class="legends">
+                                                    <div class="legend d-flex flex-row align-items-center">
+                                                        <div class='w-3 h-3 rounded-full bg-info mr-2'></div><span
+                                                            class='text-xs'>Mes Pasado</span>
+                                                    </div>
+                                                    <div class="legend d-flex flex-row align-items-center">
+                                                        <div class='w-3 h-3 rounded-full bg-blue mr-2'></div><span
+                                                            class='text-xs'>Mes Actual</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8 col-12">
+                                            <canvas id="bar"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h4 class="card-title">Productos con Bajo Stock</h4>
+                                    <div class="d-flex align-items-center">
+                                        <button class="btn btn-sm btn-outline-primary mr-2" id="btn-print-low-stock"
+                                            title="Descargar PDF / Imprimir">
+                                            <i data-feather="download"></i>
+                                        </button>
+                                        <i data-feather="alert-circle"></i>
+                                    </div>
+                                </div>
+                                <div class="card-body px-0 pb-0">
+                                    <div class="table-responsive">
+                                        <table class='table mb-0' id="table1">
+                                            <thead>
+                                                <tr>
+                                                    <th>Código</th>
+                                                    <th>Descripción</th>
+                                                    <th>Stock</th>
+                                                    <th>Estado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="low-stock-table-body">
+                                                <!-- Dynamic Content -->
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <footer>
+                <div class="footer clearfix mb-0 text-muted">
+                    <div class="float-left">
+                        <p>2025 &copy; Ale</p>
+                    </div>
+
+                </div>
+            </footer>
+        </div>
+    </div>
+    <script src="assets/js/feather-icons/feather.min.js"></script>
+    <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
+    <script src="assets/js/app.js"></script>
+
+    <script src="assets/vendors/chartjs/Chart.min.js"></script>
+    <script src="assets/vendors/apexcharts/apexcharts.min.js"></script>
+    <script src="assets/js/pages/dashboard.js"></script>
+    <script src="assets/js/dashboard-admin.js"></script>
+
+    <script src="assets/js/main.js"></script>
+</body>
+
+</html>
