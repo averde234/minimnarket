@@ -15,21 +15,22 @@
 
     try {
         const user = JSON.parse(userJson);
+        const userRol = (user.rol || user.role || '').toLowerCase().trim();
 
         // 2. Verificar rol de administrador o vendedor
-        if (user.rol !== 'admin' && user.rol !== 'vendedor') {
-            console.warn('Acceso denegado: Usuario no es admin ni vendedor.');
-            // Si es cliente, mándalo a su dashboard
+        if (userRol !== 'admin' && userRol !== 'vendedor' && userRol !== 'administrador') {
+            console.warn('Acceso denegado: Usuario no es admin ni vendedor.', userRol);
             window.location.href = 'dashboard-cliente.html';
             return;
         }
 
         // Si es admin o vendedor, dejamos que cargue la página
-        console.log('Acceso concedido:', user.rol);
+        console.log('Acceso concedido para rol:', userRol);
 
-        // 3. Filtrar Sidebar para Vendedores (Ejecutar cuando el DOM esté listo)
-        if (user.rol === 'vendedor') {
-            document.addEventListener('DOMContentLoaded', function () {
+        // 3. Filtrar Sidebar para Vendedores
+        if (userRol === 'vendedor') {
+            const filterSidebar = () => {
+                console.log('Iniciando filtrado de sidebar para vendedor...');
                 const sidebarMenu = document.querySelector('.sidebar-menu .menu');
                 if (sidebarMenu) {
                     const items = sidebarMenu.querySelectorAll('.sidebar-item');
@@ -37,39 +38,39 @@
                         const link = item.querySelector('a');
                         if (!link) return;
 
-                        const href = link.getAttribute('href');
                         const text = link.innerText.trim().toLowerCase();
+                        console.log('Evaluando item:', text);
 
-                        // Lista blanca de lo que PUEDE ver el vendedor
-                        const allowed = [
-                            'dashboard',
-                            'ventas',
-                            'registrar ventas',
-                            'historial de ventas',
-                            'mis compras'
-                        ];
-
-                        // Verificar si el texto o el href coincide con lo permitido
+                        // Lógica permitida
                         let isAllowed = false;
-
-                        // Permitir Dashboard (y corregir link si es necesario)
-                        if (text.includes('dashboard')) {
+                        if (text.includes('dashboard') ||
+                            text.includes('ventas') ||
+                            text.includes('mis compras') ||
+                            text.includes('cerrar')) {
                             isAllowed = true;
+                        }
+
+                        // Acción específica
+                        if (text.includes('dashboard')) {
                             link.setAttribute('href', 'dashboard-vendedor.html');
                         }
 
-                        // Permitir Ventas
-                        if (text.includes('venta')) {
-                            isAllowed = true;
-                        }
-
-                        // Ocultar todo lo demás (Productos, Inventario, Compras, Proveedores, Usuarios)
+                        // Ocultar lo prohibido
                         if (!isAllowed) {
+                            console.log('Ocultando item:', text);
                             item.style.display = 'none';
+                            item.classList.add('d-none'); // Bootstrap class just in case
                         }
                     });
                 }
-            });
+            };
+
+            // Ejecutar inmediatamente si el DOM ya está listo, o esperar
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', filterSidebar);
+            } else {
+                filterSidebar();
+            }
         }
 
     } catch (e) {
