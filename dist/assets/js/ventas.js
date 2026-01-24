@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    const API_URL = "https://minimnarket.onrender.com";
+    // const API_URL = "https://minimnarket.onrender.com";
+    const API_URL = "http://localhost:3000"; // Usar backend local para probar cambios recientes
 
     // Elementos del DOM
     const codigoInput = document.getElementById("codigoBarra");
@@ -110,8 +111,8 @@ document.addEventListener("DOMContentLoaded", async () => {
             renderCart();
 
         } catch (error) {
-            console.error(error);
-            mostrarAlerta("Producto no encontrado o error de red.");
+            console.error("Error adding product:", error);
+            mostrarAlerta("Error: " + error.message);
             codigoInput.select();
         }
     };
@@ -199,16 +200,24 @@ document.addEventListener("DOMContentLoaded", async () => {
     const procesarVenta = async () => {
         if (cart.length === 0) return mostrarAlerta("El carrito está vacío.");
 
-        if (!confirm("¿Confirmar venta?")) return;
+
+
+        // if (!confirm("¿Confirmar venta?")) return; // Alerta eliminada a petición del usuario
 
         // Recalcular totales desde los datos para evitar errores de parseo del DOM
         const calculatedTotalUsd = cart.reduce((acc, item) => acc + (item.cantidad * item.precioUsd), 0);
         const calculatedTotalBs = calculatedTotalUsd * precioDolar;
 
+        // Obtener usuario logueado
+        const userStr = localStorage.getItem('user');
+        const user = userStr ? JSON.parse(userStr) : null;
+        console.log("Usuario detectado para venta:", user); // Debug Log
+
         // payload
         const venta = {
             total_usd: parseFloat(calculatedTotalUsd.toFixed(2)),
             total_bs: parseFloat(calculatedTotalBs.toFixed(2)),
+            usuario_id: user ? user.id : null, // Enviar ID del usuario
             items: cart.map(c => ({
                 producto_id: c.id,
                 cantidad: c.cantidad,

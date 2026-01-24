@@ -17,7 +17,8 @@ export const createVenta = async (req, res) => {
             .from('ventas')
             .insert([{
                 total_usd: total_usd,
-                total_bs: total_bs
+                total_bs: total_bs,
+                usuario_id: req.body.usuario_id // Guardar ID del vendedor
             }]) // Supabase pone fecha default now() usualmente
             .select()
             .single();
@@ -94,7 +95,7 @@ export const createVenta = async (req, res) => {
 
 export const listarVentas = async (req, res) => {
     try {
-        const { data, error } = await supabase
+        let query = supabase
             .from('ventas')
             .select(`
                 id,
@@ -103,6 +104,13 @@ export const listarVentas = async (req, res) => {
                 total_bs
             `)
             .order('fecha', { ascending: false });
+
+        // Filtrar por usuario si se solicita
+        if (req.query.usuario_id) {
+            query = query.eq('usuario_id', req.query.usuario_id);
+        }
+
+        const { data, error } = await query;
 
         if (error) throw new Error(error.message);
 

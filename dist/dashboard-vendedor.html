@@ -73,17 +73,105 @@
 
             <div class="main-content container-fluid">
                 <div class="page-title">
-                    <h3>Bienvenido a tu Panel</h3>
+                    <h3>Dashboard Vendedor</h3>
+                    <p class="text-subtitle text-muted">Resumen de tus ventas.</p>
                 </div>
                 <section class="section">
-                    <div class="card">
-                        <div class="card-header">
-                            <h4 class="card-title">Mis Pedidos Recientes</h4>
+                    <div class="row mb-2">
+                        <!-- Card: Tasa Dolar -->
+                        <div class="col-12 col-md-4">
+                            <div class="card card-statistic">
+                                <div class="card-body p-0">
+                                    <div class="d-flex flex-column">
+                                        <div class='px-3 py-3 d-flex justify-content-between'>
+                                            <h3 class='card-title'>Tasa del Dólar</h3>
+                                        </div>
+                                        <div class="px-3 pb-3 d-flex justify-content-end align-items-end"
+                                            style="min-height: 80px;">
+                                            <h2 class="font-weight-bold mb-0 text-white" id="vendor-tasa-dolar">
+                                                Cargando...</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
-                        <div class="card-body">
-                            <p>Aquí verás tus compras (Próximamente)</p>
+
+                        <!-- Card: Ventas Hoy (Dinero) -->
+                        <div class="col-12 col-md-4">
+                            <div class="card card-statistic">
+                                <div class="card-body p-0">
+                                    <div class="d-flex flex-column">
+                                        <div class='px-3 py-3 d-flex justify-content-between'>
+                                            <h3 class='card-title'>Mis Ventas (Hoy)</h3>
+                                        </div>
+                                        <div class="px-3 pb-3 d-flex justify-content-end align-items-end"
+                                            style="min-height: 80px;">
+                                            <h2 class="font-weight-bold mb-0 text-white" id="vendor-ventas-hoy">
+                                                Cargando...</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card: Total Ventas (Histórico) -->
+                        <div class="col-12 col-md-4">
+                            <div class="card card-statistic">
+                                <div class="card-body p-0">
+                                    <div class="d-flex flex-column">
+                                        <div class='px-3 py-3 d-flex justify-content-between'>
+                                            <h3 class='card-title'>Total Mis Ventas</h3>
+                                        </div>
+                                        <div class="px-3 pb-3 d-flex justify-content-end align-items-end"
+                                            style="min-height: 80px;">
+                                            <h2 class="font-weight-bold mb-0 text-white" id="vendor-total-ventas">
+                                                Cargando...</h2>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
+
+                    <!-- Gráfico Estilo Admin -->
+                    <div class="row mb-4">
+                        <div class="col-md-12">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h3 class='card-heading p-1 pl-3'>Mis Ventas</h3>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row">
+                                        <div class="col-md-4 col-12">
+                                            <div class="pl-3">
+                                                <h1 class='mt-5' id="vendor-sales-header">$0.00</h1>
+                                                <p class='text-xs'>
+                                                    <span class="text-green" id="vendor-sales-percentage">
+                                                        <i data-feather="bar-chart" width="15"></i> 100%
+                                                    </span>
+                                                    <span id="vendor-sales-comparison">vs mes anterior</span>
+                                                </p>
+                                                <div class="legends">
+                                                    <div class="legend d-flex flex-row align-items-center">
+                                                        <div class='w-3 h-3 rounded-full bg-info mr-2'></div><span
+                                                            class='text-xs'>Mes Pasado</span>
+                                                    </div>
+                                                    <div class="legend d-flex flex-row align-items-center">
+                                                        <div class='w-3 h-3 rounded-full bg-blue mr-2'></div><span
+                                                            class='text-xs'>Mes Actual</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-8 col-12">
+                                            <canvas id="vendor-chart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                 </section>
             </div>
         </div>
@@ -91,6 +179,8 @@
     <script src="assets/js/feather-icons/feather.min.js"></script>
     <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="assets/js/app.js"></script>
+    <script src="assets/vendors/chartjs/Chart.min.js"></script>
+    <script src="assets/js/dashboard-vendedor.js"></script>
     <script src="assets/js/main.js"></script>
 </body>
 
