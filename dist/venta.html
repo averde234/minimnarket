@@ -1,15 +1,34 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Proveedores - Voler POS</title>
+    <title>Registrar Ventas - POS</title>
     <link rel="stylesheet" href="assets/css/bootstrap.css">
     <link rel="stylesheet" href="assets/vendors/perfect-scrollbar/perfect-scrollbar.css">
     <link rel="stylesheet" href="assets/css/app.css">
-    <link rel="shortcut icon" href="assets/images/favicon.png" type="image/x-icon">
+    <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
     <script src="assets/js/auth-guard.js"></script>
+    <style>
+        #tablaVentas td,
+        #tablaVentas th {
+            padding: 0.1rem 0.3rem !important;
+            vertical-align: middle !important;
+            font-size: 0.9rem;
+        }
+
+        .cantidad-input {
+            height: 24px !important;
+            font-size: 0.9rem !important;
+            padding: 0 0.2rem !important;
+        }
+
+        .btn-group-sm>.btn,
+        .btn-sm {
+            padding: 0.1rem 0.3rem !important;
+        }
+    </style>
 </head>
 
 <body>
@@ -36,7 +55,7 @@
                         </li>
 
                         <li class="sidebar-item  ">
-                            <a href="1productos.html" class='sidebar-link'>
+                            <a href="productos.html" class='sidebar-link'>
                                 <i data-feather="layout" width="20"></i>
                                 <span>Productos</span>
                             </a>
@@ -44,7 +63,7 @@
                         </li>
 
                         <li class="sidebar-item  ">
-                            <a href="1inventario.html" class='sidebar-link'>
+                            <a href="inventario.html" class='sidebar-link'>
                                 <i data-feather="layout" width="20"></i>
                                 <span>Inventario</span>
                             </a>
@@ -65,14 +84,14 @@
                                 </li>
 
                                 <li>
-                                    <a href="1LISTACOMPRA.html">Historial de compras</a>
+                                    <a href="listacompra.html">Historial de compras</a>
                                 </li>
 
                             </ul>
 
                         </li>
 
-                        <li class="sidebar-item  has-sub">
+                        <li class="sidebar-item  has-sub active">
                             <a href="#" class='sidebar-link'>
                                 <i data-feather="triangle" width="20"></i>
                                 <span>Ventas</span>
@@ -81,19 +100,19 @@
                             <ul class="submenu ">
 
                                 <li>
-                                    <a href="1VENTA.html">Registrar ventas</a>
+                                    <a href="venta.html">Registrar ventas</a>
                                 </li>
 
                                 <li>
-                                    <a href="1LISTAVENTA.html">Historial de ventas</a>
+                                    <a href="listaventa.html">Historial de ventas</a>
                                 </li>
 
                             </ul>
 
                         </li>
 
-                        <li class="sidebar-item active ">
-                            <a href="1proveedores.html" class='sidebar-link'>
+                        <li class="sidebar-item  ">
+                            <a href="proveedores.html" class='sidebar-link'>
                                 <i data-feather="layout" width="20"></i>
                                 <span>Proveedores</span>
                             </a>
@@ -101,7 +120,7 @@
                         </li>
 
                         <li class="sidebar-item  ">
-                            <a href="1usuarios.html" class='sidebar-link'>
+                            <a href="usuarios.html" class='sidebar-link'>
                                 <i data-feather="layout" width="20"></i>
                                 <span>Usuarios</span>
                             </a>
@@ -141,117 +160,109 @@
                 <div class="page-title">
                     <div class="row">
                         <div class="col-12 col-md-6 order-md-1 order-last">
-                            <h3>Gestión de Proveedores</h3>
-                            <p class="text-subtitle text-muted">Administra los proveedores del sistema.</p>
+                            <h3>Punto de Venta (POS)</h3>
+                            <p>Tasa de cambio: <span id="precio-dolar">Cargando...</span></p>
                         </div>
+
                     </div>
                 </div>
 
-                <div class="row" id="table-striped">
-                    <div class="col-12">
+                <div class="row justify-content-center">
+                    <div class="col-md-9">
                         <div class="card">
-                            <div class="card-header d-flex justify-content-between align-items-center">
-                                <h4 class="card-title">Listado de Proveedores</h4>
-                                <button type="button" class="btn btn-primary" data-toggle="modal"
-                                    data-target="#modalCrearProveedor">
-                                    <i data-feather="plus"></i> Agregar Proveedor
-                                </button>
+                            <div class="card-header">
+                                <div class="row justify-content-center">
+                                    <div class="col-md-10">
+                                        <div class="input-group">
+                                            <!-- Icono eliminado -->
+                                            <input type="text" id="codigoBarra" class="form-control"
+                                                placeholder="Escanea o escribe código..." autofocus>
+                                            <button class="btn btn-primary" id="btnBuscar">Agregar</button>
+                                        </div>
+                                        <small class="text-muted text-center d-block">Presiona Enter para
+                                            agregar.</small>
+                                    </div>
+                                </div>
                             </div>
-                            <div class="card-content">
+                            <div class="card-body">
                                 <div class="table-responsive">
-                                    <table class="table table-striped mb-0" id="tablaProveedores">
+                                    <table class="table table-striped table-sm" id="tablaVentas">
                                         <thead>
                                             <tr>
-                                                <th>ID</th>
-                                                <th>Nombre / Razón Social</th>
-                                                <th>RIF / ID</th>
-                                                <th>Email</th>
-                                                <th>Teléfono</th>
-                                                <th>Dirección</th>
+                                                <th>Código</th>
+                                                <th>Producto</th>
+                                                <th>Precio Unit ($)</th>
+                                                <th>Precio Unit (Bs)</th>
+                                                <th style="width: 100px;">Cant.</th>
+                                                <th>Subtotal ($)</th>
+                                                <th>Acción</th>
                                             </tr>
                                         </thead>
-                                        <tbody id="tbody-proveedores">
-                                            <!-- JS will populate this -->
+                                        <tbody id="cart-body">
+                                            <!-- Filas generadas dinámicamente -->
                                         </tbody>
                                     </table>
+                                </div>
+
+                                <!-- Mensaje si está vacío -->
+                                <div id="empty-msg" class="text-center text-muted mt-5">
+                                    <h3>El carrito está vacío</h3>
+                                    <p>Escanea un producto para comenzar</p>
                                 </div>
                             </div>
                         </div>
                     </div>
+
+                    <!-- Sección Lateral: Totales y Pago -->
+                    <div class="col-md-3">
+                        <div class="card">
+                            <div class="card-header bg-primary text-white">
+                                <h4 class="text-white mb-0">Total a Pagar</h4>
+                            </div>
+                            <div class="card-body">
+                                <div class="mt-4 mb-4 text-center">
+                                    <h3 class="text-primary mb-3" id="total-items">0 Artículos</h3>
+                                    <h1 class="display-4 text-success fw-bold mb-0" id="total-usd">$0.00</h1>
+                                    <h4 class="text-muted mt-2" id="total-bs">Bs 0.00</h4>
+                                </div>
+                                <hr>
+                                <div class="d-grid gap-2">
+                                    <button id="btnProcesar" class="btn btn-success btn-lg btn-block">
+                                        <i data-feather="shopping-cart"></i> Cobrar
+                                    </button>
+                                    <button id="btnLimpiar" class="btn btn-danger btn-block">
+                                        <i data-feather="trash-2"></i> Cancelar Venta
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Alert Container -->
+                <div style="position: fixed; bottom: 20px; right: 20px; z-index: 1000;">
+                    <div id="alert-error" class="alert alert-danger" style="display: none;"></div>
+                    <div id="alert-success" class="alert alert-success" style="display: none;"></div>
                 </div>
 
                 <footer>
                     <div class="footer clearfix mb-0 text-muted">
                         <div class="float-left">
-                            <p>2025 &copy; Voler POS</p>
+                            <p>2025 &copy; Ale</p>
                         </div>
                     </div>
                 </footer>
             </div>
-
-            <!-- Modal Crear Proveedor -->
-            <div class="modal fade" id="modalCrearProveedor" tabindex="-1" role="dialog"
-                aria-labelledby="modalCrearProveedorTitle" aria-hidden="true">
-                <div class="modal-dialog modal-dialog-centered" role="document">
-                    <div class="modal-content">
-                        <div class="modal-header bg-primary">
-                            <h5 class="modal-title white" id="modalCrearProveedorTitle">Nuevo Proveedor</h5>
-                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                <i data-feather="x"></i>
-                            </button>
-                        </div>
-                        <div class="modal-body">
-                            <!-- In-modal Alerts -->
-                            <div id="prov-alert-error" class="alert alert-danger" style="display:none;"></div>
-                            <div id="prov-alert-success" class="alert alert-success" style="display:none;"></div>
-
-                            <form id="formCrearProveedor">
-                                <div class="form-group">
-                                    <label>Nombre / Razón Social</label>
-                                    <input type="text" id="provNombre" class="form-control" required>
-                                </div>
-                                <div class="form-group">
-                                    <label>RIF / Identificación</label>
-                                    <input type="text" id="provRif" class="form-control" placeholder="J-12345678-0">
-                                </div>
-                                <div class="form-group">
-                                    <label>Email</label>
-                                    <input type="email" id="provEmail" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label>Teléfono</label>
-                                    <input type="text" id="provTelefono" class="form-control">
-                                </div>
-                                <div class="form-group">
-                                    <label>Dirección</label>
-                                    <textarea id="provDireccion" class="form-control" rows="2"></textarea>
-                                </div>
-                            </form>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-light-secondary" data-dismiss="modal">
-                                <span class="d-none d-sm-block">Cancelar</span>
-                            </button>
-                            <button type="button" class="btn btn-primary ml-1" id="btnGuardarProveedor">
-                                <span class="d-none d-sm-block">Guardar</span>
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-
         </div>
     </div>
-
     <script src="assets/js/feather-icons/feather.min.js"></script>
     <script src="assets/vendors/perfect-scrollbar/perfect-scrollbar.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"></script>
     <script src="assets/js/app.js"></script>
     <script src="assets/js/main.js"></script>
     <script src="assets/js/session.js"></script>
-
-    <!-- Logic -->
-    <script src="assets/js/proveedores.js?v=1.3"></script>
+    <!-- Lógica del POS -->
+    <script src="assets/js/ventas.js?v=1.1"></script>
 </body>
 
 </html>

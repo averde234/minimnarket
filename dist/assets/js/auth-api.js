@@ -146,7 +146,7 @@ document.addEventListener('DOMContentLoaded', function () {
                         }
 
                         alert('Usuario creado correctamente');
-                        window.location.href = '1usuarios.html';
+                        window.location.href = 'usuarios.html';
 
                     } else {
                         // Flujo Publico: Registro normal
@@ -299,3 +299,4 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
 });
+
