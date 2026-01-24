@@ -1,6 +1,6 @@
 document.addEventListener("DOMContentLoaded", async () => {
-    // const API_URL = "https://minimnarket.onrender.com";
-    const API_URL = "http://localhost:3000"; // Usar backend local para probar cambios recientes
+    const API_URL = "https://minimnarket.onrender.com";
+    // const API_URL = "http://localhost:3000"; // Usar backend local para probar cambios recientes
 
     // Elementos del DOM
     const codigoInput = document.getElementById("codigoBarra");
