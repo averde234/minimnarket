@@ -110,5 +110,5 @@ window.logout = function () {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
-    window.location.href = '1auth-login.html';
+    window.location.href = 'login.html';
 };

@@ -111,18 +111,40 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const guardarProveedor = async () => {
         const nombre = inputNombre.value.trim();
-        if (!nombre) {
-            // alert("El nombre es obligatorio"); // Eliminado
+        const rif = inputRif.value.trim();
+        const email = inputEmail.value.trim();
+        const telefono = inputTelefono.value.trim();
+        const direccion = inputDireccion.value.trim();
+
+        const alertError = document.getElementById("prov-alert-error");
+        const alertSuccess = document.getElementById("prov-alert-success");
+
+        const showProvAlert = (msg, type) => {
+            if (type === 'error') {
+                alertError.innerText = msg;
+                alertError.style.display = 'block';
+                alertSuccess.style.display = 'none';
+                setTimeout(() => alertError.style.display = 'none', 3000);
+            } else {
+                alertSuccess.innerText = msg;
+                alertSuccess.style.display = 'block';
+                alertError.style.display = 'none';
+                setTimeout(() => alertSuccess.style.display = 'none', 3000);
+            }
+        };
+
+        if (!nombre || !rif || !email || !telefono || !direccion) {
+            showProvAlert("Todos los campos son obligatorios", "error");
             return;
         }
 
         const body = {
             nombre: nombre,
-            rif: inputRif.value.trim(),
-            identificacion: inputRif.value.trim(), // Por si el backend usa uno u otro
-            correo: inputEmail.value.trim(),
-            telefono: inputTelefono.value.trim(),
-            direccion: inputDireccion.value.trim()
+            rif: rif,
+            identificacion: rif,
+            correo: email,
+            telefono: telefono,
+            direccion: direccion
         };
 
         try {
@@ -137,25 +159,28 @@ document.addEventListener("DOMContentLoaded", async () => {
                 throw new Error(err.message || "Error al guardar");
             }
 
-            // alert("Proveedor guardado correctamente"); // Eliminado
+            showProvAlert("Proveedor guardado correctamente", "success");
 
-            // Cerrar modal simulando click
-            if (btnCloseModal) btnCloseModal.click();
-            else if (btnCancelModal) btnCancelModal.click();
+            // Esperar un poco antes de cerrar y limpiar para que se vea el mensaje
+            setTimeout(async () => {
+                // Cerrar modal simulando click
+                if (btnCloseModal) btnCloseModal.click();
+                else if (btnCancelModal) btnCancelModal.click();
 
-            // Limpiar form
-            inputNombre.value = "";
-            inputRif.value = "";
-            inputEmail.value = "";
-            inputTelefono.value = "";
-            inputDireccion.value = "";
+                // Limpiar form
+                inputNombre.value = "";
+                inputRif.value = "";
+                inputEmail.value = "";
+                inputTelefono.value = "";
+                inputDireccion.value = "";
 
-            // Recargar lista
-            await cargarProveedores();
+                // Recargar lista
+                await cargarProveedores();
+            }, 1000);
 
         } catch (error) {
             console.error("Error guardando proveedor:", error);
-            // alert("Error: " + error.message); // Eliminado
+            showProvAlert("Error: " + error.message, "error");
         }
     };
 

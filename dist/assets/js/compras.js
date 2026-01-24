@@ -243,14 +243,31 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     };
 
-    // Guardar nuevo producto desde modal
+    // Guardar nuevo producto desde modal API
     btnGuardarProducto.addEventListener('click', async () => {
         const codigo = modalCodigoInput.value;
         const descripcion = modalDescripcionInput.value;
         const categoria_id = modalCategoriaSelect.value;
 
+        const alertErrorModal = document.getElementById("modal-alert-error");
+        const alertSuccessModal = document.getElementById("modal-alert-success");
+
+        const showModalAlert = (msg, type) => {
+            if (type === 'error') {
+                alertErrorModal.innerText = msg;
+                alertErrorModal.style.display = "block";
+                alertSuccessModal.style.display = "none";
+                setTimeout(() => alertErrorModal.style.display = "none", 3000);
+            } else {
+                alertSuccessModal.innerText = msg;
+                alertSuccessModal.style.display = "block";
+                alertErrorModal.style.display = "none";
+                setTimeout(() => alertSuccessModal.style.display = "none", 3000);
+            }
+        };
+
         if (!descripcion || !categoria_id) {
-            alert("Por favor complete todos los campos del producto.");
+            showModalAlert("Por favor complete todos los campos del producto.", "error");
             return;
         }
 
@@ -278,11 +295,11 @@ document.addEventListener("DOMContentLoaded", () => {
             precioEntradaBs.value = "";
             precioEntradaUsd.value = "";
 
-            alert("Producto creado exitosamente. Puede continuar con la compra.");
+            alert("Producto creado exitosamente. Puede continuar con la compra."); // Main alert
 
         } catch (error) {
             console.error("Error creando producto:", error);
-            alert("Error al crear el producto. Verifique los datos.");
+            showModalAlert("Error al crear el producto. Verifique los datos.", "error");
         }
     });
 
