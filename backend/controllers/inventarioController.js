@@ -21,8 +21,11 @@ export const listarInventario = async (req, res) => {
         porcentaje_ganancia,
         ganancia_usd,
         total_usd,
-        productos (codigo_barra, descripcion),
-        categorias (nombre),
+        productos (
+          codigo_barra,
+          descripcion,
+          categorias (nombre)
+        ),
         proveedor (nombre)
       `);
 

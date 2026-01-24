@@ -64,11 +64,9 @@ export async function crearUsuario(req, res) {
       .upsert([{
         id: auth_id, // Importante: usar el mismo ID
         auth_id,
-        role, // o rol, dependiendo de tu columna
-        rol: role, // redundancia por si acaso
+        rol: role,
         email,
         telefono: phone,
-        phone,
         nombre: nombre, // A veces nombre guarda "Nombre Apellido"
         apellido,
         cedula
@@ -109,7 +107,7 @@ export async function actualizarUsuario(req, res) {
     // 2. Actualizar perfil en public.users
     const { data, error } = await supabase
       .from("users")
-      .update({ role, phone, nombre }) // No actualizamos email aqui pq no existe columna, o si existe es redundante pero la guia es Auth.
+      .update({ rol: role, telefono: phone, nombre }) // No actualizamos email aqui pq no existe columna, o si existe es redundante pero la guia es Auth.
       // Si tu tabla users tiene columna email, agregala aqui tambien: .update({ role, phone, nombre, email })
       .eq("id", id)
       .select()

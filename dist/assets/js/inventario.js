@@ -74,7 +74,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                         precioUsd: 0,
                         lastId: -1,
                         proveedor: item.proveedor?.nombre || "N/A",
-                        categoria: item.categorias?.nombre || "N/A",
+                        categoria: item.productos?.categorias?.nombre || "N/A",
                         precioEntrada: parseFloat(item.precio_entrada_usd) || 0,
                         margen: parseFloat(item.porcentaje_ganancia) || 0,
                         ganancia: parseFloat(item.ganancia_usd) || 0
@@ -87,7 +87,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                     agrupado[key].precioUsd = precioUsd;
                     agrupado[key].lastId = item.id;
                     agrupado[key].proveedor = item.proveedor?.nombre || "N/A";
-                    agrupado[key].categoria = item.categorias?.nombre || "N/A";
+                    agrupado[key].categoria = item.productos?.categorias?.nombre || "N/A";
                     agrupado[key].precioEntrada = parseFloat(item.precio_entrada_usd) || 0;
                     agrupado[key].margen = parseFloat(item.porcentaje_ganancia) || 0;
                     agrupado[key].ganancia = parseFloat(item.ganancia_usd) || 0;

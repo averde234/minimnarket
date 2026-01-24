@@ -168,14 +168,20 @@ const verDetalleVenta = async (id) => {
         const dateObj = new Date(sale.fecha);
 
         // Populate Receipt Metadata
-        // Hardcoded placeholders for Client/Seller as per current DB limitation
-        document.getElementById('r_cliente').textContent = "Cliente General";
-        document.getElementById('r_rif').textContent = "V-00000000";
-        document.getElementById('r_vendedor').textContent = "Vendedor de Turno";
+        // Safely set text content only if element exists
+        const setText = (id, text) => {
+            const el = document.getElementById(id);
+            if (el) el.textContent = text;
+        };
 
-        document.getElementById('r_factura').textContent = sale.id.toString().padStart(8, '0');
-        document.getElementById('r_fecha').textContent = dateObj.toLocaleDateString('es-VE');
-        document.getElementById('r_hora').textContent = dateObj.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' });
+        // Client/Vendor info removed from HTML, so these checks prevent errors
+        setText('r_cliente', "Cliente General");
+        setText('r_rif', "V-00000000");
+        setText('r_vendedor', "Vendedor de Turno");
+
+        setText('r_factura', sale.id.toString().padStart(8, '0'));
+        setText('r_fecha', dateObj.toLocaleDateString('es-VE'));
+        setText('r_hora', dateObj.toLocaleTimeString('es-VE', { hour: '2-digit', minute: '2-digit' }));
 
         // Populate Table
         // Calculate implicit exchange rate for this sale
@@ -189,37 +195,33 @@ const verDetalleVenta = async (id) => {
 
         // Populate Table
         const tbody = document.getElementById('r_tbody');
-        tbody.innerHTML = "";
+        if (tbody) {
+            tbody.innerHTML = "";
+            if (sale.venta_detalle && sale.venta_detalle.length > 0) {
+                sale.venta_detalle.forEach((d, index) => {
+                    const tr = document.createElement('tr');
+                    const cod = d.productos ? (d.productos.codigo_barra || 'N/A') : 'XXX';
+                    const desc = d.productos ? d.productos.descripcion : 'Producto desconocido';
 
-        if (sale.venta_detalle && sale.venta_detalle.length > 0) {
-            sale.venta_detalle.forEach((d, index) => {
-                const tr = document.createElement('tr');
-                const cod = d.productos ? (d.productos.codigo_barra || 'N/A') : 'XXX';
-                const desc = d.productos ? d.productos.descripcion : 'Producto desconocido';
+                    // Convert line items to Bs
+                    const precioBs = parseFloat(d.precio_unitario_usd) * rate;
+                    const subtotalBs = parseFloat(d.subtotal_usd) * rate;
 
-                // Convert line items to Bs
-                const precioBs = parseFloat(d.precio_unitario_usd) * rate;
-                const subtotalBs = parseFloat(d.subtotal_usd) * rate;
-
-                tr.innerHTML = `
-                    <td>${index + 1} ${cod}</td>
-                    <td>${desc}</td>
-                    <td class="text-center">${d.cantidad}</td>
-                    <td class="text-right">${precioBs.toFixed(2)}</td>
-                    <td class="text-right">${subtotalBs.toFixed(2)}</td>
-                `;
-                tbody.appendChild(tr);
-            });
+                    tr.innerHTML = `
+                        <td>${index + 1} ${cod}</td>
+                        <td>${desc}</td>
+                        <td class="text-center">${d.cantidad}</td>
+                        <td class="text-right">${precioBs.toFixed(2)}</td>
+                        <td class="text-right">${subtotalBs.toFixed(2)}</td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+            }
         }
 
         // Totals
-        // User requested removing IVA breakdown and only showing Total in Bs.
-
-        document.getElementById('r_total_factura').textContent = totalBs.toFixed(2);
-        // document.getElementById('r_total_pagar').textContent = totalBs.toFixed(2); // Removed as per instruction
-
-        // Remove separate USD fields or just use BS field
-        document.getElementById('r_gran_total_bs').textContent = totalBs.toFixed(2);
+        setText('r_total_factura', totalBs.toFixed(2));
+        setText('r_gran_total_bs', totalBs.toFixed(2));
 
         // Show modal via hidden button click (works with Bootstrap data-api without needing JS object)
         const btnOpen = document.getElementById('btnOpenModal');
@@ -227,12 +229,14 @@ const verDetalleVenta = async (id) => {
             btnOpen.click();
         } else {
             // Fallback
-            $('#modalDetalleVenta').modal('show');
+            if (window.jQuery && window.jQuery('#modalDetalleVenta').modal) {
+                window.jQuery('#modalDetalleVenta').modal('show');
+            }
         }
 
     } catch (error) {
-        console.error(error);
-        alert("Error cargando detalles: " + error.message);
+        console.error("Error cargando detalles:", error);
+        // User requested NO ALERTS, just logs.
     }
 };
 
