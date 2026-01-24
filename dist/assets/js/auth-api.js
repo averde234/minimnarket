@@ -106,9 +106,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
                 // Validación de seguridad de contraseña
                 // Min 8 caracteres, 1 mayúscula, 1 número, 1 caracter especial
-                const passwordRegex = /.{8,}/;
+                const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
                 if (!passwordRegex.test(password)) {
-                    showAlert('La contraseña debe tener al menos 8 caracteres.', 'danger');
+                    showAlert('La contraseña debe tener al menos 8 caracteres, incluir una mayúscula, un número y un caracter especial.', 'danger');
                     return;
                 }
 
