@@ -2,7 +2,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Verificar sesión
     const userStr = localStorage.getItem('user');
     if (!userStr) {
-        window.location.href = '1auth-login.html';
+        window.location.href = 'login.html';
         return;
     }
     const user = JSON.parse(userStr);
@@ -11,8 +11,12 @@ document.addEventListener('DOMContentLoaded', async () => {
     try {
         const resp = await fetch('https://minimnarket.onrender.com/dolar');
         const data = await resp.json();
-        if (data.price) {
-            document.getElementById('vendor-tasa-dolar').innerText = `Bs ${data.price.toFixed(2)}`;
+
+        // La API devuelve structure { current: { usd: 355.55... } }
+        const precio = data.current?.usd || data.price || data.promedio || 0;
+
+        if (precio) {
+            document.getElementById('vendor-tasa-dolar').innerText = `Bs ${precio.toFixed(2)}`;
         }
     } catch (e) {
         console.error('Error cargando dolar', e);
@@ -110,7 +114,7 @@ function renderVendorChart(data) {
                 data: data,
                 backgroundColor: '#5A8DEE', // Azul principal
                 borderRadius: 5,
-                barThickness: 10
+                barThickness: 50 // Mucho más grueso
             }]
         },
         options: {

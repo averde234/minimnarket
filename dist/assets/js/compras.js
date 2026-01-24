@@ -152,17 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
     btnGuardar.addEventListener("click", async () => {
         const productos_id = parseInt(productoInput.dataset.id);
         const proveedor_id = parseInt(proveedorSelect.value);
-
-        // Validación básica
-        if (!productos_id || isNaN(productos_id)) {
-            alert("Primero busca un producto válido por código.");
-            return mostrarAlerta("error");
-        }
-        if (!proveedor_id || isNaN(proveedor_id)) {
-            alert("Selecciona un proveedor.");
-            return mostrarAlerta("error");
-        }
-
         const cantidad = normalizarNumero(cantidadInput.value);
         const precioEntrada = normalizarNumero(precioEntradaUsd.value);
         const precioSalida = normalizarNumero(precioSalidaUsd.value);
@@ -171,13 +160,21 @@ document.addEventListener("DOMContentLoaded", () => {
         const margen = normalizarNumero(margenGananciaUsd.value);
         const total = cantidad * precioSalida;
 
-        // Ojo: ¿Total USD es (PrecioSalida * Cantidad) o (PrecioEntrada * Cantidad)? 
-        // Usualmente en inventario 'total' es valor de venta o costo? 
-        // Dejaré tu lógica actual.
+        // Validación: Campos obligatorios
+        if (!productos_id || isNaN(productos_id) ||
+            !proveedor_id || isNaN(proveedor_id) ||
+            cantidad <= 0 ||
+            precioEntrada <= 0 ||
+            cantidadInput.value.trim() === "" ||
+            porcentajeInput.value.trim() === "") {
+
+            mostrarAlerta("error");
+            return;
+        }
 
         const bodyData = {
             productos_id,
-            categorias_id: categoriaId, // Debe venir del producto buscado
+            categorias_id: categoriaId,
             proveedor_id,
             cantidad,
             precio_entrada_usd: precioEntrada,
@@ -203,7 +200,6 @@ document.addEventListener("DOMContentLoaded", () => {
             } else {
                 const err = await response.json();
                 console.error("Error al guardar:", err);
-                alert("Error al guardar: " + (err.error || err.message || "Desconocido")); // Mostrar error detallado al user
                 mostrarAlerta("error");
             }
         } catch (error) {
@@ -271,7 +267,6 @@ document.addEventListener("DOMContentLoaded", () => {
             const nuevoProducto = await res.json();
 
             // Cerrar modal
-            // Cerrar modal (Click en X)
             if (btnCloseModal) btnCloseModal.click();
 
             // Auto-rellenar formulario principal
@@ -283,7 +278,6 @@ document.addEventListener("DOMContentLoaded", () => {
             precioEntradaBs.value = "";
             precioEntradaUsd.value = "";
 
-            mostrarAlerta("success");
             alert("Producto creado exitosamente. Puede continuar con la compra.");
 
         } catch (error) {

@@ -112,7 +112,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     const guardarProveedor = async () => {
         const nombre = inputNombre.value.trim();
         if (!nombre) {
-            alert("El nombre es obligatorio");
+            // alert("El nombre es obligatorio"); // Eliminado
             return;
         }
 
@@ -137,7 +137,7 @@ document.addEventListener("DOMContentLoaded", async () => {
                 throw new Error(err.message || "Error al guardar");
             }
 
-            alert("Proveedor guardado correctamente");
+            // alert("Proveedor guardado correctamente"); // Eliminado
 
             // Cerrar modal simulando click
             if (btnCloseModal) btnCloseModal.click();
@@ -155,7 +155,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         } catch (error) {
             console.error("Error guardando proveedor:", error);
-            alert("Error: " + error.message);
+            // alert("Error: " + error.message); // Eliminado
         }
     };
 

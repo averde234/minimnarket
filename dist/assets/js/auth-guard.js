@@ -9,7 +9,7 @@
         // Ocultar todo el contenido inmediatamente para que no se vea nada
         document.documentElement.style.display = 'none';
         window.stop(); // Detener carga de recursos
-        window.location.href = '1auth-login.html';
+        window.location.href = 'login.html';
         return;
     }
 
@@ -76,7 +76,7 @@
     } catch (e) {
         console.error('Error al leer sesión:', e);
         localStorage.clear();
-        window.location.href = '1auth-login.html';
+        window.location.href = 'login.html';
     }
 
     // 4. Mostrar nombre del usuario en la UI si existe el elemento

@@ -21,7 +21,7 @@ document.addEventListener('DOMContentLoaded', () => {
     } else if (!userStr) {
         // Si no hay usuario, redirigir al login (Protección básica de frontend)
         if (!window.location.pathname.includes('auth-login') && !window.location.pathname.includes('auth-register')) {
-            window.location.href = '1auth-login.html';
+            window.location.href = 'login.html';
         }
     }
 
@@ -33,7 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
             localStorage.removeItem('access_token');
             localStorage.removeItem('refresh_token');
             localStorage.removeItem('user');
-            window.location.href = '1auth-login.html';
+            window.location.href = 'login.html';
         });
     }
 });

@@ -172,7 +172,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                         showAlert('Registro exitoso. Redirigiendo...', 'success');
                         setTimeout(() => {
-                            window.location.href = '1auth-login.html';
+                            window.location.href = 'login.html';
                         }, 2000);
                     }
 
@@ -266,7 +266,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
                     showAlert('Contraseña actualizada. Redirigiendo al login...', 'success');
                     setTimeout(() => {
-                        window.location.href = '1auth-login.html';
+                        window.location.href = 'login.html';
                     }, 2000);
 
                 } catch (error) {

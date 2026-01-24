@@ -2,7 +2,7 @@
 (function () {
     const userJson = localStorage.getItem('user');
     if (!userJson) {
-        window.location.href = '1auth-login.html';
+        window.location.href = 'login.html';
         return;
     }
     // Opcional: Verificar que NO sea admin para evitar confusiones, 
@@ -27,5 +27,5 @@ function logout() {
     localStorage.removeItem('access_token');
     localStorage.removeItem('refresh_token');
     localStorage.removeItem('user');
-    window.location.href = '1auth-login.html';
+    window.location.href = 'login.html';
 }
