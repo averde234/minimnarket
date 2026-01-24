@@ -4,7 +4,45 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Custom Auth Logic managed by auth-api.js -->
+    <style>
+        body {
+            display: none;
+        }
+    </style>
+    <script>
+        (function () {
+            function fail() {
+                window.location.href = 'login.html';
+            }
+
+            try {
+                const token = localStorage.getItem('access_token');
+                const userStr = localStorage.getItem('user');
+
+                if (!token || !userStr) {
+                    fail();
+                    return;
+                }
+
+                const user = JSON.parse(userStr);
+                const role = (user.rol || user.role || '').toLowerCase().trim();
+
+                if (role !== 'admin' && role !== 'administrador') {
+                    fail();
+                    return;
+                }
+
+                // If we get here, user is Admin. Show body when ready.
+                document.addEventListener('DOMContentLoaded', function () {
+                    document.body.style.display = 'block';
+                });
+
+            } catch (e) {
+                console.error("Auth check failed", e);
+                fail();
+            }
+        })();
+    </script>
     <title>Registro - Mini Market</title>
     <link rel="stylesheet" href="assets/css/bootstrap.css">
 
