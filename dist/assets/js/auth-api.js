@@ -66,7 +66,14 @@ document.addEventListener('DOMContentLoaded', function () {
                     }
 
                 } catch (error) {
-                    showAlert(error.message, 'danger');
+                    console.error("Login error:", error);
+                    let msg = error.message;
+                    if (msg.includes("Invalid login credentials")) {
+                        msg = "Credenciales incorrectas. Verifique su correo y contraseña.";
+                    } else if (msg.includes("Email not confirmed")) {
+                        msg = "Correo no confirmado. Verifique su bandeja de entrada.";
+                    }
+                    showAlert(msg, 'danger');
                 }
             });
         }

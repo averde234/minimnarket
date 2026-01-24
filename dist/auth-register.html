@@ -4,11 +4,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Sign up - Voler Admin Dashboard</title>
+    <script>
+        // SEGURIDAD CRITICA
+        (function () {
+            function fail(url) {
+                window.stop();
+                window.location.href = url;
+                throw new Error("Access denied");
+            }
+
+            try {
+                const userStr = localStorage.getItem('user');
+                if (!userStr) {
+                    fail('login.html');
+                }
+
+                const user = JSON.parse(userStr);
+                const role = (user.rol || user.role || '').toLowerCase();
+
+                if (role !== 'admin' && role !== 'administrador') {
+                    fail('login.html');
+                }
+
+                // Si pasa, mostramos el body cuando cargue
+                document.addEventListener('DOMContentLoaded', function () {
+                    document.body.style.display = 'block';
+                });
+
+            } catch (e) {
+                console.error(e);
+                if (e.message !== "Access denied") fail('login.html');
+            }
+        })();
+    </script>
+    <title>Registro - Mini Market</title>
     <link rel="stylesheet" href="assets/css/bootstrap.css">
 
     <link rel="shortcut icon" href="assets/images/favicon.svg" type="image/x-icon">
     <link rel="stylesheet" href="assets/css/app.css">
+    <!-- Removed auth-guard.js to avoid conflict/double-check -->
+
+    <style>
+        body {
+            display: none !important;
+        }
+    </style>
 </head>
 
 <body>
