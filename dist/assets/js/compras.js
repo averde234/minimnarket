@@ -1,5 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const API_URL = "https://minimnarket.onrender.com";
+    // Detectar entorno: Local vs Producción
+    const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+        ? 'http://localhost:5000'
+        : 'https://minimnarket.onrender.com';
 
     // Inputs
     const codigoBarra = document.getElementById("codigoBarra");
@@ -116,13 +119,13 @@ document.addEventListener("DOMContentLoaded", () => {
         const margenDecimal = margenPorcentaje / 100;
 
         // Asumimos que "Precio Entrada" es el COSTO UNITARIO.
-        // Calculamos Precio Salida (PVP Unitario)
+        // Calculamos Precio Salida (PVP TOTAL) - wait user said output is total.
+        // But logic below calculates it based on Entrance.
+
         let pOutBs = 0;
         if (margenDecimal < 1) {
-            // Fórmula: Costo / (1 - Margen)
             pOutBs = pBs / (1 - margenDecimal);
         } else {
-            // Fallback: Costo * (1 + Margen)
             pOutBs = pBs * (1 + margenDecimal);
         }
 
@@ -131,16 +134,22 @@ document.addEventListener("DOMContentLoaded", () => {
         precioSalidaBs.value = pOutBs.toFixed(2);
         precioSalidaUsd.value = pOutUsd.toFixed(2);
 
-        // Margen de ganancia (Unitario)
+        // Margen de ganancia
         const gananciaBs = pOutBs - pBs;
         const gananciaUsd = pOutUsd - pUsd;
 
         margenGananciaBs.value = gananciaBs.toFixed(2);
         margenGananciaUsd.value = gananciaUsd.toFixed(2);
 
-        // Precio Unitario (Es el mismo Precio Salida)
-        precioUnidadBs.value = pOutBs.toFixed(2);
-        precioUnidadUsd.value = pOutUsd.toFixed(2);
+        // Precio Unitario (Total Salida / Cantidad)
+        if (cantidad > 0) {
+            precioUnidadBs.value = (pOutBs / cantidad).toFixed(2);
+            precioUnidadUsd.value = (pOutUsd / cantidad).toFixed(2);
+        } else {
+            // Si cantidad es 0, no podemos calcular unitario (o ponemos 0)
+            precioUnidadBs.value = "0.00";
+            precioUnidadUsd.value = "0.00";
+        }
     };
 
     cantidadInput.addEventListener("input", recalcular);
@@ -158,7 +167,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const porcentaje = normalizarNumero(porcentajeInput.value);
         const precioUnidad = normalizarNumero(precioUnidadUsd.value);
         const margen = normalizarNumero(margenGananciaUsd.value);
-        const total = cantidad * precioSalida;
+        const total = precioSalida; // Total es el precio salida (que ya es total)
 
         // Validación: Campos obligatorios
         if (!productos_id || isNaN(productos_id) ||
