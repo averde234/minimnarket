@@ -118,10 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const margenPorcentaje = normalizarNumero(porcentajeInput.value);
         const margenDecimal = margenPorcentaje / 100;
 
-        // Asumimos que "Precio Entrada" es el COSTO UNITARIO.
-        // Calculamos Precio Salida (PVP TOTAL) - wait user said output is total.
-        // But logic below calculates it based on Entrance.
-
+        // Asumimos que "Precio Entrada" es el COSTO UNITARIO (Input del usuario)
+        // Por lo tanto, pOutBs será el PRECIO DE VENTA UNITARIO.
         let pOutBs = 0;
         if (margenDecimal < 1) {
             pOutBs = pBs / (1 - margenDecimal);
@@ -131,238 +129,235 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const pOutUsd = pOutBs / tasa;
 
+        // Mostrar PRECIO DE SALIDA como UNITARIO también (para consistencia con DB)
+        // O si el usuario espera ver totales aquí, tendríamos que cambiar la lógica de guardado.
+        // Dado que ventas.js usa precio_salida_usd como unitario, mantenemos esto como Unitario.
         precioSalidaBs.value = pOutBs.toFixed(2);
         precioSalidaUsd.value = pOutUsd.toFixed(2);
 
-        // Margen de ganancia
+        // Margen de ganancia (Unitario)
         const gananciaBs = pOutBs - pBs;
         const gananciaUsd = pOutUsd - pUsd;
 
         margenGananciaBs.value = gananciaBs.toFixed(2);
         margenGananciaUsd.value = gananciaUsd.toFixed(2);
 
-        // Precio Unitario (Total Salida / Cantidad)
-        if (cantidad > 0) {
-            console.log(`Calculando Unitario: Total=${pOutBs}, Cant=${cantidad}`);
-            precioUnidadBs.value = (pOutBs / cantidad).toFixed(2);
-            precioUnidadUsd.value = (pOutUsd / cantidad).toFixed(2);
-        } else {
-            // Si cantidad es 0, no podemos calcular unitario (o ponemos 0)
-            precioUnidadBs.value = "0.00";
-            precioUnidadUsd.value = "0.00";
-        }
-    };
+        // Precio Unitario (Es igual al precio de salida porque todo el cálculo fue unitario)
+        precioUnidadBs.value = pOutBs.toFixed(2);
+        precioUnidadUsd.value = pOutUsd.toFixed(2);
 
-    cantidadInput.addEventListener("input", recalcular);
-    precioEntradaBs.addEventListener("input", recalcular);
-    precioEntradaUsd.addEventListener("input", recalcular);
-    porcentajeInput.addEventListener("input", recalcular);
 
-    // Guardar inventario
-    btnGuardar.addEventListener("click", async () => {
-        const productos_id = parseInt(productoInput.dataset.id);
-        const proveedor_id = parseInt(proveedorSelect.value);
-        const cantidad = normalizarNumero(cantidadInput.value);
-        const precioEntrada = normalizarNumero(precioEntradaUsd.value);
-        const precioSalida = normalizarNumero(precioSalidaUsd.value);
-        const porcentaje = normalizarNumero(porcentajeInput.value);
-        const precioUnidad = normalizarNumero(precioUnidadUsd.value);
-        const margen = normalizarNumero(margenGananciaUsd.value);
-        const total = precioSalida; // Total es el precio salida (que ya es total)
 
-        // Validación: Campos obligatorios
-        if (!productos_id || isNaN(productos_id) ||
-            !proveedor_id || isNaN(proveedor_id) ||
-            cantidad <= 0 ||
-            precioEntrada <= 0 ||
-            cantidadInput.value.trim() === "" ||
-            porcentajeInput.value.trim() === "") {
+        cantidadInput.addEventListener("input", recalcular);
+        precioEntradaBs.addEventListener("input", recalcular);
+        precioEntradaUsd.addEventListener("input", recalcular);
+        porcentajeInput.addEventListener("input", recalcular);
 
-            mostrarAlerta("error");
-            return;
-        }
+        // Guardar inventario
+        btnGuardar.addEventListener("click", async () => {
+            const productos_id = parseInt(productoInput.dataset.id);
+            const proveedor_id = parseInt(proveedorSelect.value);
+            const cantidad = normalizarNumero(cantidadInput.value);
+            const precioEntrada = normalizarNumero(precioEntradaUsd.value);
+            const precioSalida = normalizarNumero(precioSalidaUsd.value);
+            const porcentaje = normalizarNumero(porcentajeInput.value);
+            const precioUnidad = normalizarNumero(precioUnidadUsd.value);
+            const margen = normalizarNumero(margenGananciaUsd.value);
+            const total = precioSalida; // Total es el precio salida (que ya es total)
 
-        const bodyData = {
-            productos_id,
-            categorias_id: categoriaId,
-            proveedor_id,
-            cantidad,
-            precio_entrada_usd: precioEntrada,
-            precio_salida_usd: precioSalida,
-            precio_unidad_usd: precioUnidad,
-            porcentaje_ganancia: porcentaje,
-            ganancia_usd: margen,
-            total_usd: total
-        };
+            // Validación: Campos obligatorios
+            if (!productos_id || isNaN(productos_id) ||
+                !proveedor_id || isNaN(proveedor_id) ||
+                cantidad <= 0 ||
+                precioEntrada <= 0 ||
+                cantidadInput.value.trim() === "" ||
+                porcentajeInput.value.trim() === "") {
 
-        console.log("Enviando:", bodyData);
-
-        try {
-            const response = await fetch(`${API_URL}/inventario`, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(bodyData)
-            });
-
-            if (response.ok) {
-                mostrarAlerta("success");
-                limpiarFormulario();
-            } else {
-                const err = await response.json();
-                console.error("Error al guardar:", err);
                 mostrarAlerta("error");
-            }
-        } catch (error) {
-            console.error("Error en guardar:", error);
-            mostrarAlerta("error");
-        }
-    });
-
-    btnLimpiar.addEventListener("click", limpiarFormulario);
-
-    // Modal elements
-    // Usamos jQuery dado que la plantilla parece ser Bootstrap 4 y tiene jQuery cargado en app.js/vendors
-    // Modal elements
-    // Workaround: Disparar evento click en botón oculto para abrir modal (evita dependencia de bootstrap/jquery global)
-    const btnOpenModal = document.getElementById('btnOpenModal');
-    // Para cerrar, buscamos el botón 'cancelar' o la 'x' dentro del modal
-    const btnCloseModal = document.querySelector('#modalAgregarProducto .close');
-    const modalCodigoInput = document.getElementById('modalCodigo');
-    const modalDescripcionInput = document.getElementById('modalDescripcion');
-    const modalCategoriaSelect = document.getElementById('modalCategoria');
-    const btnGuardarProducto = document.getElementById('btnGuardarProducto');
-
-    const cargarCategorias = async () => {
-        try {
-            const res = await fetch(`${API_URL}/categorias`);
-            const categorias = await res.json();
-
-            // Limpiar opciones manteniendo la primera
-            modalCategoriaSelect.innerHTML = '<option value="" selected disabled>Seleccione una categoría</option>';
-
-            const lista = Array.isArray(categorias) ? categorias : (categorias.categorias || []);
-
-            lista.forEach(c => {
-                const opt = document.createElement("option");
-                opt.value = c.id;
-                opt.textContent = c.nombre;
-                modalCategoriaSelect.appendChild(opt);
-            });
-        } catch (error) {
-            console.error("Error cargando categorías:", error);
-        }
-    };
-
-    // Guardar nuevo producto desde modal API
-    btnGuardarProducto.addEventListener('click', async () => {
-        const codigo = modalCodigoInput.value;
-        const descripcion = modalDescripcionInput.value;
-        const categoria_id = modalCategoriaSelect.value;
-
-        const alertErrorModal = document.getElementById("modal-alert-error");
-        const alertSuccessModal = document.getElementById("modal-alert-success");
-
-        const showModalAlert = (msg, type) => {
-            if (type === 'error') {
-                alertErrorModal.innerText = msg;
-                alertErrorModal.style.display = "block";
-                alertSuccessModal.style.display = "none";
-                setTimeout(() => alertErrorModal.style.display = "none", 3000);
-            } else {
-                alertSuccessModal.innerText = msg;
-                alertSuccessModal.style.display = "block";
-                alertErrorModal.style.display = "none";
-                setTimeout(() => alertSuccessModal.style.display = "none", 3000);
-            }
-        };
-
-        if (!descripcion || !categoria_id) {
-            showModalAlert("Por favor complete todos los campos del producto.", "error");
-            return;
-        }
-
-        try {
-            const body = { codigo_barra: codigo, descripcion, categoria_id };
-            const res = await fetch(`${API_URL}/productos`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(body)
-            });
-
-            if (!res.ok) throw new Error("Error al crear producto");
-
-            const nuevoProducto = await res.json();
-
-            // Cerrar modal
-            if (btnCloseModal) btnCloseModal.click();
-
-            // Auto-rellenar formulario principal
-            productoInput.value = nuevoProducto.descripcion;
-            productoInput.dataset.id = nuevoProducto.id;
-            categoriaId = nuevoProducto.categoria_id;
-
-            // Resetear inputs de precio para ingresar datos de la compra
-            precioEntradaBs.value = "";
-            precioEntradaUsd.value = "";
-
-            alert("Producto creado exitosamente. Puede continuar con la compra."); // Main alert
-
-        } catch (error) {
-            console.error("Error creando producto:", error);
-            showModalAlert("Error al crear el producto. Verifique los datos.", "error");
-        }
-    });
-
-    // Buscar producto por código de barra
-    btnBuscar.addEventListener("click", async () => {
-        const codigo = codigoBarra.value.trim();
-        if (!codigo) return mostrarAlerta("error");
-
-        try {
-            const res = await fetch(`${API_URL}/productos/codigo/${codigo}`);
-            // if (!res.ok) throw new Error("Producto no encontrado"); // Eliminamos esto para manejar el 404
-
-            if (res.status === 404 || !res.ok) {
-                // Producto no encontrado -> Abrir Modal
-                modalCodigoInput.value = codigo;
-                modalDescripcionInput.value = "";
-                modalCategoriaSelect.value = ""; // Reset select
-                if (btnOpenModal) btnOpenModal.click(); // ABRIR MODAL
                 return;
             }
 
-            const data = await res.json();
-            // Soporte para estructura array o objeto único
-            const p = Array.isArray(data) ? data[0] : (data.productos ? data.productos[0] : data);
+            const bodyData = {
+                productos_id,
+                categorias_id: categoriaId,
+                proveedor_id,
+                cantidad,
+                precio_entrada_usd: precioEntrada,
+                precio_salida_usd: precioSalida,
+                precio_unidad_usd: precioUnidad,
+                porcentaje_ganancia: porcentaje,
+                ganancia_usd: margen,
+                total_usd: total
+            };
 
-            if (!p) throw new Error("Producto no encontrado (data vacía)");
+            console.log("Enviando:", bodyData);
 
-            console.log("Producto encontrado:", p);
+            try {
+                const response = await fetch(`${API_URL}/inventario`, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(bodyData)
+                });
 
-            productoInput.value = p.descripcion || "";
-            productoInput.dataset.id = p.id || "";
-            categoriaId = p.categoria_id || p.categorias_id || null; // Ajuste por si el nombre de columna varía
+                if (response.ok) {
+                    mostrarAlerta("success");
+                    limpiarFormulario();
+                } else {
+                    const err = await response.json();
+                    console.error("Error al guardar:", err);
+                    mostrarAlerta("error");
+                }
+            } catch (error) {
+                console.error("Error en guardar:", error);
+                mostrarAlerta("error");
+            }
+        });
 
-            proveedorSelect.selectedIndex = 0;
-            precioEntradaBs.value = 0;
-            precioEntradaUsd.value = 0;
-            porcentajeInput.value = 0;
+        btnLimpiar.addEventListener("click", limpiarFormulario);
 
-            recalcular();
-        } catch (error) {
-            console.error("Error al buscar producto:", error);
-            productoInput.value = "";
-            productoInput.dataset.id = "";
+        // Modal elements
+        // Usamos jQuery dado que la plantilla parece ser Bootstrap 4 y tiene jQuery cargado en app.js/vendors
+        // Modal elements
+        // Workaround: Disparar evento click en botón oculto para abrir modal (evita dependencia de bootstrap/jquery global)
+        const btnOpenModal = document.getElementById('btnOpenModal');
+        // Para cerrar, buscamos el botón 'cancelar' o la 'x' dentro del modal
+        const btnCloseModal = document.querySelector('#modalAgregarProducto .close');
+        const modalCodigoInput = document.getElementById('modalCodigo');
+        const modalDescripcionInput = document.getElementById('modalDescripcion');
+        const modalCategoriaSelect = document.getElementById('modalCategoria');
+        const btnGuardarProducto = document.getElementById('btnGuardarProducto');
 
-            alertError.innerText = "Error general al buscar producto.";
-            mostrarAlerta("error");
-        }
+        const cargarCategorias = async () => {
+            try {
+                const res = await fetch(`${API_URL}/categorias`);
+                const categorias = await res.json();
+
+                // Limpiar opciones manteniendo la primera
+                modalCategoriaSelect.innerHTML = '<option value="" selected disabled>Seleccione una categoría</option>';
+
+                const lista = Array.isArray(categorias) ? categorias : (categorias.categorias || []);
+
+                lista.forEach(c => {
+                    const opt = document.createElement("option");
+                    opt.value = c.id;
+                    opt.textContent = c.nombre;
+                    modalCategoriaSelect.appendChild(opt);
+                });
+            } catch (error) {
+                console.error("Error cargando categorías:", error);
+            }
+        };
+
+        // Guardar nuevo producto desde modal API
+        btnGuardarProducto.addEventListener('click', async () => {
+            const codigo = modalCodigoInput.value;
+            const descripcion = modalDescripcionInput.value;
+            const categoria_id = modalCategoriaSelect.value;
+
+            const alertErrorModal = document.getElementById("modal-alert-error");
+            const alertSuccessModal = document.getElementById("modal-alert-success");
+
+            const showModalAlert = (msg, type) => {
+                if (type === 'error') {
+                    alertErrorModal.innerText = msg;
+                    alertErrorModal.style.display = "block";
+                    alertSuccessModal.style.display = "none";
+                    setTimeout(() => alertErrorModal.style.display = "none", 3000);
+                } else {
+                    alertSuccessModal.innerText = msg;
+                    alertSuccessModal.style.display = "block";
+                    alertErrorModal.style.display = "none";
+                    setTimeout(() => alertSuccessModal.style.display = "none", 3000);
+                }
+            };
+
+            if (!descripcion || !categoria_id) {
+                showModalAlert("Por favor complete todos los campos del producto.", "error");
+                return;
+            }
+
+            try {
+                const body = { codigo_barra: codigo, descripcion, categoria_id };
+                const res = await fetch(`${API_URL}/productos`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                if (!res.ok) throw new Error("Error al crear producto");
+
+                const nuevoProducto = await res.json();
+
+                // Cerrar modal
+                if (btnCloseModal) btnCloseModal.click();
+
+                // Auto-rellenar formulario principal
+                productoInput.value = nuevoProducto.descripcion;
+                productoInput.dataset.id = nuevoProducto.id;
+                categoriaId = nuevoProducto.categoria_id;
+
+                // Resetear inputs de precio para ingresar datos de la compra
+                precioEntradaBs.value = "";
+                precioEntradaUsd.value = "";
+
+                alert("Producto creado exitosamente. Puede continuar con la compra."); // Main alert
+
+            } catch (error) {
+                console.error("Error creando producto:", error);
+                showModalAlert("Error al crear el producto. Verifique los datos.", "error");
+            }
+        });
+
+        // Buscar producto por código de barra
+        btnBuscar.addEventListener("click", async () => {
+            const codigo = codigoBarra.value.trim();
+            if (!codigo) return mostrarAlerta("error");
+
+            try {
+                const res = await fetch(`${API_URL}/productos/codigo/${codigo}`);
+                // if (!res.ok) throw new Error("Producto no encontrado"); // Eliminamos esto para manejar el 404
+
+                if (res.status === 404 || !res.ok) {
+                    // Producto no encontrado -> Abrir Modal
+                    modalCodigoInput.value = codigo;
+                    modalDescripcionInput.value = "";
+                    modalCategoriaSelect.value = ""; // Reset select
+                    if (btnOpenModal) btnOpenModal.click(); // ABRIR MODAL
+                    return;
+                }
+
+                const data = await res.json();
+                // Soporte para estructura array o objeto único
+                const p = Array.isArray(data) ? data[0] : (data.productos ? data.productos[0] : data);
+
+                if (!p) throw new Error("Producto no encontrado (data vacía)");
+
+                console.log("Producto encontrado:", p);
+
+                productoInput.value = p.descripcion || "";
+                productoInput.dataset.id = p.id || "";
+                categoriaId = p.categoria_id || p.categorias_id || null; // Ajuste por si el nombre de columna varía
+
+                proveedorSelect.selectedIndex = 0;
+                precioEntradaBs.value = 0;
+                precioEntradaUsd.value = 0;
+                porcentajeInput.value = 0;
+
+                recalcular();
+            } catch (error) {
+                console.error("Error al buscar producto:", error);
+                productoInput.value = "";
+                productoInput.dataset.id = "";
+
+                alertError.innerText = "Error general al buscar producto.";
+                mostrarAlerta("error");
+            }
+        });
+
+        // Inicializar
+        (async () => {
+            await cargarPrecioDolar();
+            await cargarProveedores();
+            await cargarCategorias();
+        })();
     });
-
-    // Inicializar
-    (async () => {
-        await cargarPrecioDolar();
-        await cargarProveedores();
-        await cargarCategorias();
-    })();
-});
