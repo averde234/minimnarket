@@ -136,7 +136,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const porcentaje = normalizarNumero(porcentajeInput.value);
     const precioUnidad = normalizarNumero(precioUnidadUsd.value);
     const margen = normalizarNumero(margenGananciaUsd.value);
-    const total = cantidad * precioSalida;
+    const total = precioSalida;
 
     const bodyData = {
       productos_id,
