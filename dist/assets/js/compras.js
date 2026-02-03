@@ -143,6 +143,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         // Precio Unitario (Total Salida / Cantidad)
         if (cantidad > 0) {
+            console.log(`Calculando Unitario: Total=${pOutBs}, Cant=${cantidad}`);
             precioUnidadBs.value = (pOutBs / cantidad).toFixed(2);
             precioUnidadUsd.value = (pOutUsd / cantidad).toFixed(2);
         } else {
