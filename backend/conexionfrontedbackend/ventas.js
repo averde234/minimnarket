@@ -1,6 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
   // const API_URL = "https://minimnarket.onrender.com";
-  const API_URL = window.location.origin;
+  const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+    ? 'http://localhost:5000'
+    : 'https://minimnarket.onrender.com';
 
   const codigoBarra = document.getElementById("codigoBarra");
   const buscarCodigo = document.getElementById("buscarCodigo");
@@ -116,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function recalcular() {
     const cantidad = normalizarNumero(cantidadInput.value) || 0;
-    const tasa = precioDolarActual || normalizarNumero(inputTasa.value) || 0;
+    const tasa = precioDolarActual || normalizarNumero(inputTasa.value) || 1;
 
     let pInBs = normalizarNumero(precioEntradaBs.value);
     let pInUsd = normalizarNumero(precioEntradaUsd.value);
