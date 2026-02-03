@@ -15,15 +15,14 @@ export const getDashboardStats = async (req, res) => {
         // 1. Tasa del Dólar (External API or fallback)
         let tasaDolar = 0;
         try {
-            const dolarRes = await fetch("https://api.dolarvzla.com/public/exchange-rate", {
-                headers: { "User-Agent": "Mozilla/5.0" }
-            });
+            const dolarRes = await fetch("https://ve.dolarapi.com/v1/dolares");
             if (dolarRes.ok) {
                 const dolarData = await dolarRes.json();
-                if (dolarData.current && dolarData.current.usd) {
-                    tasaDolar = dolarData.current.usd;
+                if (Array.isArray(dolarData)) {
+                    const oficial = dolarData.find(d => d.fuente === 'oficial');
+                    tasaDolar = oficial ? oficial.promedio : 0;
                 } else {
-                    tasaDolar = dolarData.price || dolarData.promedio || 0;
+                    tasaDolar = dolarData.promedio || dolarData.price || 0;
                 }
             }
         } catch (e) {
