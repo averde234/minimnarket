@@ -163,7 +163,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const porcentaje = normalizarNumero(porcentajeInput.value);
             const precioUnidad = normalizarNumero(precioUnidadUsd.value);
             const margen = normalizarNumero(margenGananciaUsd.value);
-            const total = precioSalida; // Total es el precio salida (que ya es total)
+            // El total (factura) es Cantidad * Precio Unitario (pSalidaUsd que es unitario)
+            const total = cantidad * precioSalida;
 
             // Validación: Campos obligatorios
             if (!productos_id || isNaN(productos_id) ||
