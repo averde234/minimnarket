@@ -357,6 +357,61 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     });
 
+
+    // --- Lógica para Agregar Categoría (Nueva funcionalidad) ---
+    const btnGuardarCategoria = document.getElementById("btnGuardarCategoria");
+    const inputNombreCategoria = document.getElementById("inputNombreCategoria");
+    const btnCloseCatModal = document.querySelector("#modalAgregarCategoria .close");
+
+    if (btnGuardarCategoria) {
+        btnGuardarCategoria.addEventListener("click", async () => {
+            const nombre = inputNombreCategoria.value.trim();
+            const alertErrorCat = document.getElementById("cat-alert-error");
+            const alertSuccessCat = document.getElementById("cat-alert-success");
+
+            const showCatAlert = (msg, type) => {
+                if (type === 'error') {
+                    alertErrorCat.innerText = msg;
+                    alertErrorCat.style.display = "block";
+                    alertSuccessCat.style.display = "none";
+                    setTimeout(() => alertErrorCat.style.display = "none", 3000);
+                } else {
+                    alertSuccessCat.innerText = msg;
+                    alertSuccessCat.style.display = "block";
+                    alertErrorCat.style.display = "none";
+                    setTimeout(() => alertSuccessCat.style.display = "none", 3000);
+                }
+            };
+
+            if (!nombre) return showCatAlert("Ingrese un nombre para la categoría", "error");
+
+            try {
+                const res = await fetch(`${API_URL}/categorias`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nombre })
+                });
+
+                if (!res.ok) throw new Error("Error al guardar categoría");
+
+                showCatAlert("Categoría agregada correctamente", "success");
+                inputNombreCategoria.value = "";
+
+                // Recargar el select de categorías
+                await cargarCategorias();
+
+                // Opcional: Cerrar modal después de un tiempo
+                setTimeout(() => {
+                    if (btnCloseCatModal) btnCloseCatModal.click();
+                }, 1500);
+
+            } catch (error) {
+                console.error(error);
+                showCatAlert("Error al guardar la categoría", "error");
+            }
+        });
+    }
+
     // Inicializar
     (async () => {
         await cargarPrecioDolar();
