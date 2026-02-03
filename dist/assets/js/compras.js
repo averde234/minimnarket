@@ -118,8 +118,8 @@ document.addEventListener("DOMContentLoaded", () => {
         const margenPorcentaje = normalizarNumero(porcentajeInput.value);
         const margenDecimal = margenPorcentaje / 100;
 
-        // Asumimos que "Precio Entrada" es el COSTO UNITARIO (Input del usuario)
-        // Por lo tanto, pOutBs será el PRECIO DE VENTA UNITARIO.
+        // Asumimos que "Precio Entrada" es el COSTO TOTAL DEL LOTE (Inputs del usuario son totales)
+        // Por lo tanto, pOutBs será el PRECIO DE VENTA TOTAL.
         let pOutBs = 0;
         if (margenDecimal < 1) {
             pOutBs = pBs / (1 - margenDecimal);
@@ -129,22 +129,25 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const pOutUsd = pOutBs / tasa;
 
-        // Mostrar PRECIO DE SALIDA como UNITARIO también (para consistencia con DB)
-        // O si el usuario espera ver totales aquí, tendríamos que cambiar la lógica de guardado.
-        // Dado que ventas.js usa precio_salida_usd como unitario, mantenemos esto como Unitario.
+        // Mostrar PRECIO DE SALIDA (TOTAL)
         precioSalidaBs.value = pOutBs.toFixed(2);
         precioSalidaUsd.value = pOutUsd.toFixed(2);
 
-        // Margen de ganancia (Unitario)
+        // Margen de ganancia (Total)
         const gananciaBs = pOutBs - pBs;
         const gananciaUsd = pOutUsd - pUsd;
 
         margenGananciaBs.value = gananciaBs.toFixed(2);
         margenGananciaUsd.value = gananciaUsd.toFixed(2);
 
-        // Precio Unitario (Es igual al precio de salida porque todo el cálculo fue unitario)
-        precioUnidadBs.value = pOutBs.toFixed(2);
-        precioUnidadUsd.value = pOutUsd.toFixed(2);
+        // Precio Unitario = Precio Salida Total / Cantidad
+        if (cantidad > 0) {
+            precioUnidadBs.value = (pOutBs / cantidad).toFixed(2);
+            precioUnidadUsd.value = (pOutUsd / cantidad).toFixed(2);
+        } else {
+            precioUnidadBs.value = "0.00";
+            precioUnidadUsd.value = "0.00";
+        }
 
 
 
@@ -180,20 +183,29 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
+        // Calcular VALORES UNITARIOS para guardar en DB (La DB espera unitarios para Ventas)
+        // precioEntrada, precioSalida, margen aquí son TOTALES DEL LOTE.
+        // total es EL TOTAL DEL LOTE.
+
+        const unitEntrada = cantidad > 0 ? precioEntrada / cantidad : 0;
+        const unitSalida = cantidad > 0 ? precioSalida / cantidad : 0;
+        const unitMargen = cantidad > 0 ? margen / cantidad : 0;
+        // precioUnidad ya es unitario (calculado en recalcular)
+
         const bodyData = {
             productos_id,
             categorias_id: categoriaId,
             proveedor_id,
             cantidad,
-            precio_entrada_usd: precioEntrada,
-            precio_salida_usd: precioSalida,
-            precio_unidad_usd: precioUnidad,
+            precio_entrada_usd: unitEntrada, // Guardar UNITARIO
+            precio_salida_usd: unitSalida,   // Guardar UNITARIO
+            precio_unidad_usd: precioUnidad, // Guardar UNITARIO
             porcentaje_ganancia: porcentaje,
-            ganancia_usd: margen,
-            total_usd: total
+            ganancia_usd: unitMargen,        // Guardar UNITARIO
+            total_usd: precioSalida          // Guardar TOTAL LOTE
         };
 
-        console.log("Enviando:", bodyData);
+        console.log("Enviando (Unitarios):", bodyData);
 
         try {
             const response = await fetch(`${API_URL}/inventario`, {
