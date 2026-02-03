@@ -392,7 +392,13 @@ document.addEventListener("DOMContentLoaded", () => {
                     body: JSON.stringify({ nombre })
                 });
 
-                if (!res.ok) throw new Error("Error al guardar categoría");
+                if (!res.ok) {
+                    const errData = await res.json();
+                    if (res.status === 409 || (errData.error && errData.error.includes("exist"))) {
+                        throw new Error("La categoría ya existe");
+                    }
+                    throw new Error(errData.error || "Error al guardar categoría");
+                }
 
                 showCatAlert("Categoría agregada correctamente", "success");
                 inputNombreCategoria.value = "";
@@ -407,7 +413,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
             } catch (error) {
                 console.error(error);
-                showCatAlert("Error al guardar la categoría", "error");
+                const msg = error.message === "La categoría ya existe" ? "La categoría ya existe." : "Error al guardar la categoría.";
+                showCatAlert(msg, "error");
             }
         });
     }
