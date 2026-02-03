@@ -1,4 +1,5 @@
-const API_URL = 'http://localhost:5000';
+// const API_URL = 'http://localhost:5000';
+const API_URL = "https://minimnarket.onrender.com";
 
 let categoriasMap = {};        // { id: nombre }
 let currentPage = 1;

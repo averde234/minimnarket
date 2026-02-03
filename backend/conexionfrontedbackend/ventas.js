@@ -1,5 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const API_URL = "http://localhost:5000";
+  // const API_URL = "http://localhost:5000";
+  const API_URL = "https://minimnarket.onrender.com";
 
   const codigoBarra = document.getElementById("codigoBarra");
   const buscarCodigo = document.getElementById("buscarCodigo");

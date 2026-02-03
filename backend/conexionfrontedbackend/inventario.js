@@ -1,4 +1,5 @@
-const API_URL = "http://localhost:5000";
+// const API_URL = "http://localhost:5000";
+const API_URL = "https://minimnarket.onrender.com";
 const tableElement = document.getElementById("table1").getElementsByTagName("tbody")[0];
 const precioDolarElement = document.getElementById("precio-dolar");
 
