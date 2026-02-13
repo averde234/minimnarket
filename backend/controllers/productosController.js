@@ -29,6 +29,7 @@ export const getProductos = async (req, res) => {
     query = query.ilike('descripcion', `%${search}%`);
   }
 
+  console.log(`📋 Obteniendo productos pagina=${page} limit=${limit} search='${search}' cat='${categoriaId}'`);
   const { data, error, count } = await query.range(from, to);
 
   // const { data, error, count } = await query.range(from, to); // Previous line is already there
@@ -72,14 +73,15 @@ export const getProductoByCodigo = async (req, res) => {
     .from('productos')
     .select('*')
     .eq('codigo_barra', codigo)
-    .single();
+    .maybeSingle();
 
   if (error) {
     console.error("❌ Error Supabase:", error);
+    return res.status(500).json({ error: error.message });
   }
 
   if (!data) {
-    console.warn("⚠️ Producto no encontrado o data vacía.");
+    console.warn(`⚠️ Producto con código '${codigo}' no encontrado.`);
     return res.status(404).json({ error: 'Producto no encontrado' });
   }
 

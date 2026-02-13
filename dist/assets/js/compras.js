@@ -324,7 +324,8 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     // Buscar producto por código de barra
-    btnBuscar.addEventListener("click", async () => {
+    // Buscar producto por código de barra
+    const buscarProducto = async () => {
         const codigo = codigoBarra.value.trim();
         if (!codigo) return mostrarAlerta("error");
 
@@ -366,6 +367,26 @@ document.addEventListener("DOMContentLoaded", () => {
 
             alertError.innerText = "Error general al buscar producto.";
             mostrarAlerta("error");
+        }
+    };
+
+    btnBuscar.addEventListener("click", buscarProducto);
+
+    // Auto-envío al detectar entrada del escáner (o pegar) en Compras
+    let debounceTimer;
+    codigoBarra.addEventListener("input", (e) => {
+        clearTimeout(debounceTimer);
+        if (!e.target.value.trim()) return;
+
+        debounceTimer = setTimeout(() => {
+            buscarProducto();
+        }, 25);
+    });
+
+    codigoBarra.addEventListener("keypress", (e) => {
+        if (e.key === "Enter") {
+            clearTimeout(debounceTimer);
+            buscarProducto();
         }
     });
 

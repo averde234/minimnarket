@@ -8,6 +8,7 @@ const supabaseAdmin = getSupabaseAdmin();
 
 // Listar todo el inventario con joins anidados (publico, bypass RLS)
 export const listarInventario = async (req, res) => {
+  console.log("📦 Listando inventario...");
   try {
     const { data, error } = await supabaseAdmin
       .from("inventario")

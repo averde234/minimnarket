@@ -71,8 +71,18 @@ document.addEventListener("DOMContentLoaded", async () => {
             const resInv = await fetch(`${API_URL}/inventario`);
             const inventario = await resInv.json();
 
+            console.log("Inventario completo:", inventario);
+            console.log("Producto ID buscado:", producto.id, "Tipo:", typeof producto.id);
+
             // Buscar registros de este producto que tengan stock
-            const lotes = inventario.filter(i => i.productos_id === producto.id && i.cantidad > 0);
+            const lotes = inventario.filter(i => {
+                const matchId = i.productos_id == producto.id; // Usar == para permitir string/int
+                const hasStock = parseFloat(i.cantidad) > 0;
+                console.log(`Lote ID ${i.id}: ProdID ${i.productos_id} (${typeof i.productos_id}) vs ${producto.id}, Cant: ${i.cantidad} -> Match: ${matchId}, Stock: ${hasStock}`);
+                return matchId && hasStock;
+            });
+
+            console.log("Lotes encontrados:", lotes);
 
             if (lotes.length === 0) {
                 mostrarAlerta(`El producto "${producto.descripcion}" no tiene stock disponible.`);
@@ -250,10 +260,33 @@ document.addEventListener("DOMContentLoaded", async () => {
         }
     };
 
-    // Listeners Globales
+    // Listeners Globales 
+    // Wait, I am editing the EXISTING file. `btnProbarScanner` does not exist in the file yet. I need to ADD it.
+
+    // Let's replace the listeners section.
     btnBuscar.addEventListener("click", agregarProducto);
+
+    // Auto-envío al detectar entrada del escáner (o pegar)
+    let debounceTimer;
+    codigoInput.addEventListener("input", (e) => {
+        // Limpiar timer anterior
+        clearTimeout(debounceTimer);
+
+        // Si no hay valor, salir
+        if (!e.target.value.trim()) return;
+
+        // Esperar 25ms de inactividad para considerar el código completo y enviar
+        // Esto funciona bien para escáneres que "escriben" rápido o pegan el texto
+        debounceTimer = setTimeout(() => {
+            agregarProducto();
+        }, 25);
+    });
+
     codigoInput.addEventListener("keypress", (e) => {
-        if (e.key === "Enter") agregarProducto();
+        if (e.key === "Enter") {
+            clearTimeout(debounceTimer); // Evitar doble envío si el escáner también envía Enter
+            agregarProducto();
+        }
     });
 
     btnLimpiar.addEventListener("click", () => {
